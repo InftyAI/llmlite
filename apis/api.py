@@ -7,13 +7,12 @@ class ChatLLM:
     """
 
     How To Use:
-        from chatllm import ChatLLM
-        llm = ChatLLM(
+        chat = ChatLLM(
             model_name_or_path="<model_name_or_path>",
-            task="<task name>",
-            host="<local or api>",
+            task="<task name>", # optional, default to `text-generation`.
+            host="<local or api>", # optional, default to `local`.
             )
-        result = llm.chat(
+        result = chat.completion(
             prompt="<user prompt>",
             system_prompt="<optional system prompt>",
         )
@@ -26,6 +25,16 @@ class ChatLLM:
         task: str = "text-generation",
         host: str = "local",
     ):
+        """
+        Args:
+            model_name_or_path (str): The model name or the model path.
+            task (str): The task defining which pipeline will be returned, default to `text-generation`.
+            host (str): The place to load the model, default to `local`.
+                        `local` means loading the pre-downloaded models, so `model_name_or_path` should be the model path.
+                        `api` means requesting the hosted inference apis, e.g. HuggingFace Hosted Inference API,
+                        so `model_name_or_path` should be the exactly model name.
+        """
+
         if model_name_or_path is None:
             raise Exception("model_name_or_path must exist")
 
