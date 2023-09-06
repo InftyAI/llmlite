@@ -6,16 +6,23 @@ A library helps to communicate with all kinds of LLMs consistently.
 
 ```python
 from chatllm import ChatLLM
-llm = ChatLLM(
+
+chat = ChatLLM(
     model_name_or_path="<model_name_or_path>",
     task="<task name>", # optional, default to `text-generation`.
-    host="<local or api>", # optional, default to `local`.
+    host="<local or api>", # optional, default to `local`
     )
-result = llm.chat(
+result = chat.completion(
     prompt="<user prompt>",
     system_prompt="<optional system prompt>",
 )
 ```
+
+**Note that**:
+
+- **host=`local`** will load the pre-downloaded models, the *model_name_or_path* should be the model path.
+- **host=`api`** will request
+the hosted inference apis, e.g. [HuggingFace Hosted Inference API](https://huggingface.co/docs/api-inference/index), so *model_name_or_path* should be the exactly model name.
 
 ## Integrations
 
