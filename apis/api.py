@@ -1,6 +1,7 @@
 from llms.chat import Chat
 from llms.llama import LlamaChat
 from llms.llama_hf import LlamaHFChat
+from llms.chatglm import ChatglmChat
 
 
 class ChatLLM:
@@ -57,9 +58,11 @@ def fetch_llm(model_name: str, host: str) -> Chat:
 
     if "llama_2" in model_name or "llama-2" in model_name:
         return LlamaChat if host == "local" else LlamaHFChat
+    if "chatglm2" in model_name and host == "local":
+        return ChatglmChat
 
     raise UnavailableModelException(
-        'model unavailable, supporting model family: "llama_2".'
+        'model unavailable, supporting model family: "llama_2", "local chatglm2"'
     )
 
 
