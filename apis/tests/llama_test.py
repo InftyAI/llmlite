@@ -1,5 +1,3 @@
-import sys
-sys.path.append('/home/jerry_kon/my_chatglm/ChatLLM')
 from apis.api import ChatLLM
 chat = ChatLLM(
             model_name_or_path="/models/llama-2-7b-chat-hf",
