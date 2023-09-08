@@ -1,6 +1,8 @@
 from llms.chat import Chat
 from llms.llama import LlamaChat
 from llms.llama_hf import LlamaHFChat
+from llms.chatglm import ChatglmChat
+import warnings
 
 
 class ChatLLM:
@@ -41,13 +43,11 @@ class ChatLLM:
         llm = fetch_llm(model_name_or_path, host)
         self.chat = llm(model_name_or_path=model_name_or_path, task=task)
 
-    def completion(
-        self,
-        prompt: str,
-        system_prompt: str = None,
-    ) -> str:
+    def completion(self, prompt: str, system_prompt: str = None,) -> str:
         if prompt is None:
             raise Exception("user prompt must exist")
+        if self.chat.support_system_prompt() is False and system_prompt is not None:
+            warnings.warn("system_prompt is not supported by the api")
 
         return self.chat.completion(system_prompt=system_prompt, user_prompt=prompt)
 
@@ -57,9 +57,11 @@ def fetch_llm(model_name: str, host: str) -> Chat:
 
     if "llama_2" in model_name or "llama-2" in model_name:
         return LlamaChat if host == "local" else LlamaHFChat
+    if "chatglm2" in model_name and host == "local":
+        return ChatglmChat
 
     raise UnavailableModelException(
-        'model unavailable, supporting model family: "llama_2".'
+        'model unavailable, supporting model family: "llama_2", "local chatglm2"'
     )
 
 

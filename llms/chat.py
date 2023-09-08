@@ -28,19 +28,11 @@ class Chat(ABC):
     # TODO: Support history conversation in the future.
     @classmethod
     @abstractmethod
-    def prompt(
-        self,
-        system_prompt: str = None,
-        user_prompt: str = None,
-    ) -> str:
+    def prompt(self, system_prompt: str = None, user_prompt: str = None,) -> str:
         pass
 
     @abstractmethod
-    def completion(
-        self,
-        system_prompt: str = None,
-        user_prompt: str = None,
-    ) -> str:
+    def completion(self, system_prompt: str = None, user_prompt: str = None,) -> str:
         """
         Args:
             system_prompt (str): Not all language models support system prompt, e.g. ChatGLM2.
