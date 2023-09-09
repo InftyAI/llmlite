@@ -30,7 +30,7 @@ the hosted inference apis, e.g. [HuggingFace Hosted Inference API](https://huggi
 | ---- | ----- | ------- |
 | meta-llama/Llama-2~ | Local | Done ✅ |
 | meta-llama/Llama-2~ | API | WIP ⏳ |
-| THUDM/chatglm2~ | Local | WIP ⏳ |
+| THUDM/chatglm2~ | Local | Done ✅ |
 | ChatGPT | API | RoadMap 📋 |
 | ... | ... | ... |
 

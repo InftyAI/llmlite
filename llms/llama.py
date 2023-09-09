@@ -36,15 +36,21 @@ class LlamaChat(LocalChat):
         torch_dtype: torch.dtype = torch.float16,
     ) -> None:
         self.pipeline = build_pipeline(
-            model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
+            model_name_or_path=model_name_or_path,
+            task=task,
+            torch_dtype=torch_dtype,
         )
 
     @classmethod
-    def support_system_prompt(self) -> bool:
+    def support_system_prompt(cls) -> bool:
         return True
 
     @classmethod
-    def prompt(cls, system_prompt: str = None, user_prompt: str = None,) -> str:
+    def prompt(
+        cls,
+        system_prompt: str = None,
+        user_prompt: str = None,
+    ) -> str:
         if system_prompt is not None and user_prompt is not None:
             system_content = format_llama_prompt(
                 role=SYSTEM_PROMPT, content=system_prompt
@@ -56,7 +62,11 @@ class LlamaChat(LocalChat):
         else:
             return format_llama_prompt(content=user_prompt)
 
-    def completion(self, system_prompt: str = None, user_prompt: str = None,) -> str:
+    def completion(
+        self,
+        system_prompt: str = None,
+        user_prompt: str = None,
+    ) -> str:
         prompt = LlamaChat.prompt(system_prompt=system_prompt, user_prompt=user_prompt)
 
         logging.debug(
@@ -108,7 +118,9 @@ def format_llama_prompt(
 
 
 def build_pipeline(
-    model_name_or_path: str, task: str, torch_dtype: torch.dtype,
+    model_name_or_path: str,
+    task: str,
+    torch_dtype: torch.dtype,
 ) -> transformers.pipeline:
     tokenizer = AutoTokenizer.from_pretrained(
         model_name_or_path, trust_remote_code=True
@@ -124,5 +136,9 @@ def build_pipeline(
     )
 
     return transformers.pipeline(
-        task=task, model=model, tokenizer=tokenizer, torch_dtype=torch_dtype, device=0,
+        task=task,
+        model=model,
+        tokenizer=tokenizer,
+        torch_dtype=torch_dtype,
+        device=0,
     )
