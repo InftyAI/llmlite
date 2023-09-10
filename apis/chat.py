@@ -17,12 +17,15 @@ class ChatLLM:
 
     How To Use:
         chat = ChatLLM(
-            model_name_or_path="<model_name_or_path>",
-            task="<task name>", # optional, default to `text-generation`.
+            model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
+            task="text-generation", # optional, default to 'text-generation'
             )
+
         result = chat.completion(
-            prompt="<user prompt>",
-            system_prompt="<optional system prompt>",
+            messages=[
+                ChatMessage(role="system", content="You're a honest assistant."),
+                ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
+            ]
         )
 
     """
@@ -47,7 +50,14 @@ class ChatLLM:
             model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
         )
 
-    def completion(self, messages: List[ChatMessage]) -> str | None:
+    def completion(
+        self,
+        messages: List[ChatMessage],
+        temperature: float = 0.2,
+        max_length: int = 2048,
+        top_p: float = 0.7,
+        top_k: int | None = 3,
+    ) -> str | None:
         """
         Args:
             messages: A list of conversations looks like below:
@@ -78,7 +88,13 @@ class ChatLLM:
             LOGGER.warning("model validation not passed")
             return None
 
-        res = self.chat.completion(messages)
+        res = self.chat.completion(
+            messages=messages,
+            temperature=temperature,
+            max_length=max_length,
+            top_p=top_p,
+            top_k=top_k,
+        )
         LOGGER.debug(f"Result: {res}")
         return res
 

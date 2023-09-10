@@ -44,5 +44,5 @@ class TestChat(unittest.TestCase):
                 model_name_or_path=tc["model"],
                 task=tc["task"],
             )
-            result = chat.completion(tc["messages"])
+            result = chat.completion(messages=tc["messages"])
             self.assertNotEqual(len(result), 0)
