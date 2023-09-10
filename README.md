@@ -18,6 +18,9 @@ result = chat.completion(
     ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
   ]
 )
+
+#Output: Oh my goodness, a llama in your garden?! 😱 That's quite a surprise! 😅 As an honest assistant, I must inform you that llamas are not typically known for their gardening skills, so it's possible that the llama in your garden may have wandered there accidentally or is seeking shelter. 🐮 ...
+
 ```
 
 ## Integrations
