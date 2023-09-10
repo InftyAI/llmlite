@@ -88,17 +88,24 @@ class LlamaChat(LocalChat):
 
         return prompt
 
-    def completion(self, messages: List[ChatMessage]) -> str | None:
+    def completion(
+        self,
+        messages: List[ChatMessage],
+        temperature: float = 0.2,
+        max_length: int = 4096,
+        top_p: float = 0.7,
+        top_k: int | None = 3,
+    ) -> str | None:
         prompt = LlamaChat.prompt(messages)
         LOGGER.debug(f"Llama prompt: {prompt}")
 
         sequences = self.pipeline(
             prompt,
-            do_sample=True,
-            temperature=0.2,
-            top_p=0.9,
-            max_length=4090,
             return_full_text=False,
+            temperature=temperature,
+            max_length=max_length,
+            top_p=top_p,
+            top_k=top_k,
         )
 
         return sequences[0]["generated_text"]

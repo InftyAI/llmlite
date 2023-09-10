@@ -55,7 +55,14 @@ class ChatGLMChat(Chat):
 
         return ("").join(prompt)
 
-    def completion(self, messages: List[ChatMessage]) -> str | None:
+    def completion(
+        self,
+        messages: List[ChatMessage] = None,
+        temperature: float = 0.2,
+        max_length: int = 2048,
+        top_p: float = 0.7,
+        top_k: int | None = None,  # We do not use top_k in ChatGLM
+    ) -> str | None:
         prompt = self.prompt(messages)
         LOGGER.debug(f"ChatGLM prompt: {prompt}")
 
@@ -63,5 +70,8 @@ class ChatGLMChat(Chat):
             self.tokenizer,
             prompt,
             history=[],
+            temperature=temperature,
+            max_length=max_length,
+            top_p=top_p,
         )
         return response

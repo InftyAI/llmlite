@@ -8,8 +8,12 @@ A library helps to communicate with all kinds of LLMs consistently.
 from chatllm import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
-    task="text-generation",
+    model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
+    task="text-generation", # optional, default to 'text-generation'
+    max_length=2048, # optional, default to '2048'
+    temperature=0.2, # optional, default to '0.2'
+    top_p=0.7, # optional, default to '0.7'
+    top_k=3, # optional, default to '3'
     )
 
 result = chat.completion(
@@ -38,6 +42,8 @@ result = chat.completion(
 ## Contributions
 
 🚀 All kinds of contributions are welcomed ! Please follow [Contributing](/CONTRIBUTING.md).
+
+## Contributors
 
 🎉 Thanks to all these contributors.
 
