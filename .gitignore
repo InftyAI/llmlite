@@ -1,9 +1,12 @@
-__pycache__
 .DS_Store
-*.pyc
 .vscode
 /.VSCodeCounter
 
-/tmp/
-
+*.pyc
+__pycache__
 **/__pycache__/
+.mypy_cache/
+.empty/
+
+/tmp/
+demo.py

@@ -5,35 +5,39 @@ A library helps to communicate with all kinds of LLMs consistently.
 ## How to use
 
 ```python
-from chatllm import ChatLLM
+from chatllm import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="<model_name_or_path>",
-    task="<task name>", # optional, default to `text-generation`.
-    host="<local or api>", # optional, default to `local`
+    model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
+    task="text-generation",
     )
+
 result = chat.completion(
-    prompt="<user prompt>",
-    system_prompt="<optional system prompt>",
+  messages=[
+    ChatMessage(role="system", content="You're a honest assistant."),
+    ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
+  ]
 )
 ```
 
-**Note that**:
-
-- **host=`local`** will load the pre-downloaded models, the *model_name_or_path* should be the model path.
-- **host=`api`** will request
-the hosted inference apis, e.g. [HuggingFace Hosted Inference API](https://huggingface.co/docs/api-inference/index), so *model_name_or_path* should be the exactly model name.
-
 ## Integrations
 
-| Name | Host | State |
-| ---- | ----- | ------- |
-| meta-llama/Llama-2~ | Local | Done ✅ |
-| meta-llama/Llama-2~ | API | WIP ⏳ |
-| THUDM/chatglm2~ | Local | WIP ⏳ |
-| ChatGPT | API | RoadMap 📋 |
+| Model | State | Note |
+| ---- | ---- | ---- |
+| Llama-2 | Done ✅ | |
+| ChatGLM2 | Done ✅ | |
+| ChatGPT | WIP ⏳ | [issue#6](https://github.com/InftyAI/ChatLLM/issues/6) |
+| Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
+| Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
+| StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
 | ... | ... | ... |
 
 ## Contributions
 
 🚀 All kinds of contributions are welcomed ! Please follow [Contributing](/CONTRIBUTING.md).
+
+🎉 Thanks to all these contributors.
+
+<a href="https://github.com/InftyAI/ChatLLM/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=InftyAI/ChatLLM" />
+</a>
