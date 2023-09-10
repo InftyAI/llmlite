@@ -1,10 +1,17 @@
-import logging
+from typing import List
 
 import torch
-import transformers
+import transformers  # type: ignore
 from transformers import AutoTokenizer, LlamaForCausalLM
 
-from llms.chat import LocalChat, SYSTEM_PROMPT, USER_PROMPT
+from llms.chat import (
+    ASSISTANT_PROMPT,
+    SYSTEM_PROMPT,
+    USER_PROMPT,
+    LocalChat,
+)
+from utils.log import LOGGER
+from apis.messages import ChatMessage
 
 
 class LlamaChat(LocalChat):
@@ -32,7 +39,7 @@ class LlamaChat(LocalChat):
     def __init__(
         self,
         model_name_or_path: str,
-        task: str,
+        task: str = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
     ) -> None:
         self.pipeline = build_pipeline(
@@ -41,37 +48,49 @@ class LlamaChat(LocalChat):
             torch_dtype=torch_dtype,
         )
 
-    @classmethod
-    def support_system_prompt(cls) -> bool:
+    def validation(self, messages: List[ChatMessage]) -> bool:
+        return True
+
+    def support_system_prompt(self) -> bool:
         return True
 
     @classmethod
-    def prompt(
-        cls,
-        system_prompt: str = None,
-        user_prompt: str = None,
-    ) -> str:
-        if system_prompt is not None and user_prompt is not None:
-            system_content = format_llama_prompt(
-                role=SYSTEM_PROMPT, content=system_prompt
-            )
-            return format_llama_prompt(content=user_prompt, history=system_content)
-        elif system_prompt is not None:
-            # This is meaningless as we only have system prompt.
-            return format_llama_prompt(role=SYSTEM_PROMPT, content=system_prompt)
-        else:
-            return format_llama_prompt(content=user_prompt)
+    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+        has_system_prompt = False
+        prompt = None
 
-    def completion(
-        self,
-        system_prompt: str = None,
-        user_prompt: str = None,
-    ) -> str:
-        prompt = LlamaChat.prompt(system_prompt=system_prompt, user_prompt=user_prompt)
+        for message in messages:
+            role = message.role
+            content = message.content
 
-        logging.debug(
-            f"system_prompt: {system_prompt}\n, user_prompt: {user_prompt}\n, final_prompt: {prompt}\n"
-        )
+            if role == SYSTEM_PROMPT:
+                # We only can accept one system prompt.
+                if has_system_prompt:
+                    continue
+
+                prompt = format_llama_prompt(
+                    role=SYSTEM_PROMPT, content=content, history=None
+                )
+                has_system_prompt = True
+
+            elif role == USER_PROMPT:
+                prompt = format_llama_prompt(
+                    role=USER_PROMPT, content=content, history=prompt
+                )
+
+            elif role == ASSISTANT_PROMPT:
+                prompt = format_llama_prompt(
+                    role=ASSISTANT_PROMPT, content=content, history=prompt
+                )
+
+            else:
+                LOGGER.warning("unavailable instruction role: %s", role)
+
+        return prompt
+
+    def completion(self, messages: List[ChatMessage]) -> str | None:
+        prompt = LlamaChat.prompt(messages)
+        LOGGER.debug(f"Llama prompt: {prompt}")
 
         sequences = self.pipeline(
             prompt,
@@ -87,11 +106,13 @@ class LlamaChat(LocalChat):
 
 # TODO: trim the tokens when exceeded.
 def format_llama_prompt(
-    role: str = USER_PROMPT,
-    content: str = None,
-    history: str = None,
-    answer: str = None,
-):
+    role: str,
+    content: str,
+    history: str | None,
+) -> str:
+    if content is None:
+        return ""
+
     result = ""
 
     # SYSTEM_PROMPT will only be added once in the very beginning of the conversation.
@@ -101,19 +122,22 @@ def format_llama_prompt(
         result += "<</SYS>>\n\n"
         return result
 
-    # This is for the first run conversation of USER_PROMPT.
-    # No system prompt, return the content directly.
-    if answer is None and history is None:
-        return content
+    if role == USER_PROMPT:
+        # No system prompt
+        if history is None:
+            return "<s>[INST] " + content + " [/INST] "
+        else:
+            if history.endswith("<</SYS>>\n\n"):
+                return history + content + " [/INST] "
+            else:
+                return history + "<s>[INST] " + content + " [/INST] "
 
-    # This is for the first run conversation of USER_PROMPT.
-    # History is the system prompt.
-    if answer is None:
-        result = history + content + " [/INST] "
-        return result
+    if role == ASSISTANT_PROMPT:
+        # history or content should not be nil here.
+        if history is None or content is None:
+            return result
+        return history + content + " </s>"
 
-    # For continuous conversations here.
-    result = history + answer + " </s><s>[INST] " + content + " [/INST] "
     return result
 
 
@@ -127,7 +151,7 @@ def build_pipeline(
     )
     model = LlamaForCausalLM.from_pretrained(model_name_or_path).half().cuda().eval()
 
-    logging.info(
+    LOGGER.info(
         "Transformer pipeline with model: %s, task: %s, torch_dtype: %s, model dtype: %s",
         model_name_or_path,
         task,

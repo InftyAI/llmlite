@@ -1,9 +1,24 @@
-from transformers import AutoTokenizer, AutoModel
-from llms.chat import LocalChat
+from typing import List
+
+from transformers import AutoTokenizer, AutoModel  # type: ignore
+import torch
+
+from llms.chat import ASSISTANT_PROMPT, USER_PROMPT, Chat
+from apis.messages import ChatMessage
+from utils.log import LOGGER
 
 
-class ChatglmChat(LocalChat):
-    def __init__(self, model_name_or_path, task=None):
+class ChatGLMChat(Chat):
+    """
+    ChatGLM is mainly used for chinese questions and answers. Currently don't support system prompt yet.
+    """
+
+    def __init__(
+        self,
+        model_name_or_path: str,
+        task: str = "text-generation",
+        torch_dtype: torch.dtype = torch.float16,
+    ):
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
             trust_remote_code=True,
@@ -18,20 +33,35 @@ class ChatglmChat(LocalChat):
             .eval()
         )
 
-    def completion(self, system_prompt, user_prompt):
-        history = []
-        prompt = ChatglmChat.prompt(user_prompt=user_prompt)
-        response, history = self.model.chat(
-            self.tokenizer,
-            prompt,
-            history=history,
-        )
-        return response
+    def validation(self, messages: List[ChatMessage]) -> bool:
+        return True
 
     @classmethod
     def support_system_prompt(cls) -> bool:
         return False
 
     @classmethod
-    def prompt(cls, system_prompt: str = None, user_prompt: str = None):
-        return user_prompt
+    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+        prompt = []
+
+        for message in messages:
+            role = message.role
+            content = message.content
+
+            if role == USER_PROMPT:
+                prompt.append("问：" + content + "\n")
+            elif role == ASSISTANT_PROMPT:
+                prompt.append("答：" + content + "\n")
+
+        return ("").join(prompt)
+
+    def completion(self, messages: List[ChatMessage]) -> str | None:
+        prompt = self.prompt(messages)
+        LOGGER.debug(f"ChatGLM prompt: {prompt}")
+
+        response, _ = self.model.chat(
+            self.tokenizer,
+            prompt,
+            history=[],
+        )
+        return response
