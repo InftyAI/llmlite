@@ -4,12 +4,15 @@ lint:
 	black .
 
 .PHONY: test
-test: lint
-	python -m unittest
+test: unit-test integration-tests
+
+.PHONY: unit-test
+unit-test: lint
+	pytest tests/unit_tests
 
 .PHONY: integration-test
 integration-test: lint
-	python -m unittest discover -p "integration*.py"
+	pytest tests/integration_tests
 
 .PHONY: check
 check: lint test integration-test

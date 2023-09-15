@@ -7,9 +7,9 @@ from llmlite.llms.chat import Chat
 from llmlite.llms.chatgpt import ChatGPTChat
 from llmlite.llms.llama2 import LlamaChat
 from llmlite.llms.chatglm2 import ChatGLMChat
+from llmlite.llms.messages import ChatMessage
 from llmlite.utils.log import LOGGER
 from llmlite.apis.utils import general_validations
-from llmlite.apis.messages import ChatMessage
 
 
 class ChatLLM:

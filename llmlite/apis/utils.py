@@ -1,7 +1,7 @@
 from typing import List
 
 from llmlite.llms.chat import SYSTEM_PROMPT
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 from llmlite.utils.log import LOGGER
 
 

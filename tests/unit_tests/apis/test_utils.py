@@ -1,10 +1,8 @@
-import unittest
-
 from llmlite.apis.utils import general_validations
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 
 
-class TestUtil(unittest.TestCase):
+class TestUtil:
     def test_general_validations(self):
         test_cases = [
             {
@@ -49,8 +47,4 @@ class TestUtil(unittest.TestCase):
 
         for tc in test_cases:
             got = general_validations(tc["messages"], tc["support_system_prompt"])
-            self.assertEqual(
-                got,
-                tc["expected"],
-                ("validate '{name}' error".format(name=tc["name"])),
-            )
+            assert got == tc["expected"]

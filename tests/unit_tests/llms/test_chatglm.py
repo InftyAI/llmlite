@@ -1,11 +1,9 @@
-import unittest
-
 from llmlite.llms.chatglm2 import ChatGLMChat
 from llmlite.llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 
 
-class TestChatGLM(unittest.TestCase):
+class TestChatGLM:
     def test_prompt(self):
         test_cases = [
             {
@@ -63,8 +61,4 @@ class TestChatGLM(unittest.TestCase):
 
         for tc in test_cases:
             got = ChatGLMChat.prompt(tc["messages"])
-            self.assertEqual(
-                got,
-                tc["expected"],
-                "testcase '{case}' not passed".format(case=tc["name"]),
-            )
+            assert got == tc["expected"]

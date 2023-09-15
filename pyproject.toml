@@ -23,3 +23,11 @@ pytest = "^7.4.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration_test: marks tests as integration tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
