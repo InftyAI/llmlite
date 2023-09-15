@@ -54,14 +54,16 @@ class Chat(ABC):
         messages: List[ChatMessage],
         temperature: float,
         max_length: int,
+        do_sample: bool,
         top_p: float,
-        top_k: int | None,
+        top_k: int,
     ) -> str | None:
         """
         Args:
             messages: a list of chat messages.
             temperature: a parameter that controls the “creativity” or randomness of the text generated.
             max_length: the maximum token size.
+            do_sample: bool if set to False greedy decoding is used. Otherwise sampling is used.
             top_p: an alternative to temperature sampling, considering a subset of tokens (the nucleus) whose cumulative probability mass adds up to a certain threshold (top_p).
             top_k: a number of tokens from the highest ranking scores to be considered. This is not required for all LLMs, so optional.
         """

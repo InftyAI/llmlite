@@ -58,10 +58,11 @@ class ChatGLMChat(Chat):
     def completion(
         self,
         messages: List[ChatMessage],
-        temperature: float = 0.2,
-        max_length: int = 2048,
-        top_p: float = 0.7,
-        top_k: int | None = None,  # We do not use top_k in ChatGLM
+        temperature: float,
+        max_length: int,
+        do_sample: bool,
+        top_p: float,
+        top_k: int,
     ) -> str | None:
         prompt = self.prompt(messages)
         LOGGER.debug(f"ChatGLM prompt: {prompt}")
@@ -72,6 +73,8 @@ class ChatGLMChat(Chat):
             history=[],
             temperature=temperature,
             max_length=max_length,
+            do_sample=do_sample,
             top_p=top_p,
+            top_k=top_k,
         )
         return response
