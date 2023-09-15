@@ -1,11 +1,11 @@
-# ChatLLM
+# llmlite
 
 A library helps to communicate with all kinds of LLMs consistently.
 
 ## How to use
 
 ```python
-from chatllm import ChatLLM, ChatMessage
+from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required

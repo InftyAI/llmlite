@@ -1,5 +1,5 @@
 import torch
-from llms.chat import RemoteChat
+from llmlite.llms.chat import RemoteChat
 
 
 class HuggingFaceChat(RemoteChat):

@@ -3,9 +3,9 @@ from typing import List
 from transformers import AutoTokenizer, AutoModel  # type: ignore
 import torch
 
-from llms.chat import ASSISTANT_PROMPT, USER_PROMPT, Chat
-from apis.messages import ChatMessage
-from utils.log import LOGGER
+from llmlite.llms.chat import ASSISTANT_PROMPT, USER_PROMPT, Chat
+from llmlite.apis.messages import ChatMessage
+from llmlite.utils.log import LOGGER
 
 
 class ChatGLMChat(Chat):
@@ -57,7 +57,7 @@ class ChatGLMChat(Chat):
 
     def completion(
         self,
-        messages: List[ChatMessage] = None,
+        messages: List[ChatMessage],
         temperature: float = 0.2,
         max_length: int = 2048,
         top_p: float = 0.7,

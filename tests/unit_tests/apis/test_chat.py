@@ -1,8 +1,8 @@
 import unittest
-from llms.chatglm import ChatGLMChat
 
-from llms.llama import LlamaChat
-from apis.chat import (
+from llmlite.llms.chatglm2 import ChatGLMChat
+from llmlite.llms.llama2 import LlamaChat
+from llmlite.apis.chat import (
     fetch_llm,
     UnavailableModelException,
 )
