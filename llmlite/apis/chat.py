@@ -55,8 +55,9 @@ class ChatLLM:
         messages: List[ChatMessage],
         temperature: float = 0.2,
         max_length: int = 2048,
+        do_sample: bool = True,
         top_p: float = 0.7,
-        top_k: int | None = 3,
+        top_k: int = 3,
     ) -> str | None:
         """
         Args:
@@ -92,6 +93,7 @@ class ChatLLM:
             messages=messages,
             temperature=temperature,
             max_length=max_length,
+            do_sample=do_sample,
             top_p=top_p,
             top_k=top_k,
         )

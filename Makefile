@@ -19,7 +19,7 @@ build: lint
 	poetry build
 
 .PHONY: publish
-publish: build, export-requirements
+publish: build  export-requirements
 	poetry publish --username=__token__ --password=$(PYPI_TOKEN)
 
 .PHONEY: export-requirements
