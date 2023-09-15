@@ -3,13 +3,13 @@ from typing import List, no_type_check
 
 import torch
 
-from apis.messages import ChatMessage
-from llms.chat import Chat
-from llms.chatgpt import ChatGPTChat
-from llms.llama import LlamaChat
-from llms.chatglm import ChatGLMChat
-from utils.log import LOGGER
-from apis.utils import general_validations
+from llmlite.llms.chat import Chat
+from llmlite.llms.chatgpt import ChatGPTChat
+from llmlite.llms.llama2 import LlamaChat
+from llmlite.llms.chatglm2 import ChatGLMChat
+from llmlite.utils.log import LOGGER
+from llmlite.apis.utils import general_validations
+from llmlite.apis.messages import ChatMessage
 
 
 class ChatLLM:
@@ -62,10 +62,10 @@ class ChatLLM:
         Args:
             messages: A list of conversations looks like below:
                 [
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": "Who won the world series in 2020?"},
-                    {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-                    {"role": "user", "content": "Where was it played?"}
+                    ChatMessage(role="system", content="You are a helpful assistant."),
+                    ChatMessage(role="user", content="Who won the world series in 2020?"),
+                    ChatMessage(role="assistant", content="The Los Angeles Dodgers won the World Series in 2020."),
+                    ChatMessage(role="user", content="Where was it played?"),
                 ]
 
             We have three types of `roles` here:

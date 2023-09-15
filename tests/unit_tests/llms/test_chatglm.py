@@ -1,8 +1,8 @@
 import unittest
 
-from llms.chatglm import ChatGLMChat
-from llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
-from apis.messages import ChatMessage
+from llmlite.llms.chatglm2 import ChatGLMChat
+from llmlite.llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
+from llmlite.apis.messages import ChatMessage
 
 
 class TestChatGLM(unittest.TestCase):

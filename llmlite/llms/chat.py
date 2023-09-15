@@ -3,7 +3,7 @@ from typing import List
 
 import torch
 
-from apis.messages import ChatMessage
+from llmlite.apis.messages import ChatMessage
 
 SYSTEM_PROMPT = "system"
 USER_PROMPT = "user"

@@ -1,8 +1,8 @@
 from typing import List
 
-from llms.chat import SYSTEM_PROMPT
-from apis.messages import ChatMessage
-from utils.log import LOGGER
+from llmlite.llms.chat import SYSTEM_PROMPT
+from llmlite.apis.messages import ChatMessage
+from llmlite.utils.log import LOGGER
 
 
 def general_validations(

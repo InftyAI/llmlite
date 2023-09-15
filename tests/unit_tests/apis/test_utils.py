@@ -1,7 +1,7 @@
 import unittest
 
-from apis.utils import general_validations
-from apis.messages import ChatMessage
+from llmlite.apis.utils import general_validations
+from llmlite.apis.messages import ChatMessage
 
 
 class TestUtil(unittest.TestCase):

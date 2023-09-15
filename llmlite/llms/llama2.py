@@ -4,14 +4,14 @@ import torch
 import transformers  # type: ignore
 from transformers import AutoTokenizer, LlamaForCausalLM
 
-from llms.chat import (
+from llmlite.llms.chat import (
     ASSISTANT_PROMPT,
     SYSTEM_PROMPT,
     USER_PROMPT,
     LocalChat,
 )
-from utils.log import LOGGER
-from apis.messages import ChatMessage
+from llmlite.utils.log import LOGGER
+from llmlite.apis.messages import ChatMessage
 
 
 class LlamaChat(LocalChat):

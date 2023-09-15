@@ -1,8 +1,8 @@
 import unittest
 
-from llms.llama import LlamaChat, format_llama_prompt
-from llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
-from apis.messages import ChatMessage
+from llmlite.llms.llama2 import LlamaChat, format_llama_prompt
+from llmlite.llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
+from llmlite.apis.messages import ChatMessage
 
 
 class TestLlama(unittest.TestCase):
