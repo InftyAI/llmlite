@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModel  # type: ignore
 import torch
 
 from llmlite.llms.chat import ASSISTANT_PROMPT, USER_PROMPT, Chat
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 from llmlite.utils.log import LOGGER
 
 

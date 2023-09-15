@@ -1,11 +1,9 @@
-import unittest
-
 from llmlite.llms.llama2 import LlamaChat, format_llama_prompt
 from llmlite.llms.chat import ASSISTANT_PROMPT, SYSTEM_PROMPT, USER_PROMPT
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 
 
-class TestLlama(unittest.TestCase):
+class TestLlama:
     def test_format_llama_prompt_with_system_prompt(self):
         # format system prompt
         system_prompt = "Please complete the code in python"
@@ -18,7 +16,7 @@ Please complete the code in python
         content = format_llama_prompt(
             role=SYSTEM_PROMPT, content=system_prompt, history=None
         )
-        self.assertEqual(content, system_prompt_generated, "system prompt not right")
+        assert content == system_prompt_generated
 
         # format user prompt
         user_prompt = "Please output `hello world`"
@@ -31,7 +29,7 @@ Please output `hello world` [/INST] """
         content = format_llama_prompt(
             role=USER_PROMPT, content=user_prompt, history=content
         )
-        self.assertEqual(content, user_prompt_generated, "user prompt not right")
+        assert content == user_prompt_generated
 
         # format the answer
         answer = 'print("hello world")'
@@ -46,7 +44,7 @@ Please output `hello world` [/INST] print("hello world") </s>"""
             content=answer,
             history=content,
         )
-        self.assertEqual(content, user_prompt_generated, "assistant prompt not right")
+        assert content == user_prompt_generated
 
         # format user prompt again
         user_prompt = "Thanks for the answer"
@@ -58,7 +56,7 @@ Please output `hello world` [/INST] print("hello world") </s><s>[INST] Thanks fo
         content = format_llama_prompt(
             role=USER_PROMPT, content=user_prompt, history=content
         )
-        self.assertEqual(content, user_prompt_generated, "assistant prompt not right")
+        assert content == user_prompt_generated
 
     def test_format_llama_prompt_with_no_system_prompt(self):
         # format user prompt
@@ -67,11 +65,7 @@ Please output `hello world` [/INST] print("hello world") </s><s>[INST] Thanks fo
         content = format_llama_prompt(
             role=USER_PROMPT, content=user_prompt, history=None
         )
-        self.assertEqual(
-            content,
-            user_prompt_generated,
-            "user prompt not right",
-        )
+        assert content == user_prompt_generated
 
         # format the answer
         answer = 'print("hello world")'
@@ -81,11 +75,7 @@ Please output `hello world` [/INST] print("hello world") </s><s>[INST] Thanks fo
         content = format_llama_prompt(
             role=ASSISTANT_PROMPT, content=answer, history=content
         )
-        self.assertEqual(
-            content,
-            user_prompt_generated,
-            "assistant prompt not right",
-        )
+        assert content == user_prompt_generated
 
         # format user prompt again
         user_prompt = "Thanks for the answer"
@@ -93,11 +83,7 @@ Please output `hello world` [/INST] print("hello world") </s><s>[INST] Thanks fo
         content = format_llama_prompt(
             role=USER_PROMPT, content=user_prompt, history=content
         )
-        self.assertEqual(
-            content,
-            user_prompt_generated,
-            "user prompt not right",
-        )
+        assert content == user_prompt_generated
 
     def test_prompt(self):
         test_cases = [
@@ -176,8 +162,4 @@ Who you are [/INST] I'm an agent </s><s>[INST] You're so clever [/INST] Thanks <
 
         for tc in test_cases:
             got = LlamaChat.prompt(tc["messages"])
-            self.assertEqual(
-                got,
-                tc["expected"],
-                "testcase '{case}' not passed".format(case=tc["name"]),
-            )
+            assert got == tc["expected"]

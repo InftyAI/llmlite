@@ -11,7 +11,7 @@ from llmlite.llms.chat import (
     LocalChat,
 )
 from llmlite.utils.log import LOGGER
-from llmlite.apis.messages import ChatMessage
+from llmlite.llms.messages import ChatMessage
 
 
 class LlamaChat(LocalChat):

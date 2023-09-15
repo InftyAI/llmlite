@@ -1,8 +1,6 @@
 import os
-import unittest
 
-from llmlite.apis.messages import ChatMessage
-from llmlite.apis.chat import ChatLLM
+from llmlite.apis import ChatLLM, ChatMessage
 
 
 # This is help to test more efficiently with models pre-downloaded.
@@ -13,7 +11,7 @@ def build_model(model_name: str) -> str:
     return model_name
 
 
-class TestChat(unittest.TestCase):
+class TestChat:
     def test_chat_with_llama(self):
         test_cases = [
             {
@@ -37,7 +35,7 @@ class TestChat(unittest.TestCase):
                 task=tc["task"],
             )
             result = chat.completion(messages=tc["messages"])
-            self.assertNotEqual(len(result), 0)
+            assert len(result) > 0
 
     def test_chat_with_chatglm(self):
         test_cases = [
@@ -57,4 +55,4 @@ class TestChat(unittest.TestCase):
                 task=tc["task"],
             )
             result = chat.completion(messages=tc["messages"])
-            self.assertNotEqual(len(result), 0)
+            assert len(result) > 0

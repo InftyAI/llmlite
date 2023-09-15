@@ -1,4 +1,4 @@
-import unittest
+import pytest
 
 from llmlite.llms.chatglm2 import ChatGLMChat
 from llmlite.llms.llama2 import LlamaChat
@@ -8,7 +8,7 @@ from llmlite.apis.chat import (
 )
 
 
-class TestChat(unittest.TestCase):
+class TestChat:
     def test_fetch_llm(self):
         test_cases = [
             {
@@ -38,11 +38,7 @@ class TestChat(unittest.TestCase):
 
             if "wantException" not in tc:
                 llm = fetch_llm(model)
-                self.assertEqual(
-                    llm,
-                    tc["chat"],
-                    "test case '{case}' not passed".format(case=tc["name"]),
-                )
+                assert llm == tc["chat"]
             else:
-                with self.assertRaises(UnavailableModelException):
+                with pytest.raises(UnavailableModelException):
                     fetch_llm(model)
