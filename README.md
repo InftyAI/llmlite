@@ -25,7 +25,7 @@ result = chat.completion(
   ],
   temperature=0.2, # optional, default to '0.2'
   max_length=2048, # optional, default to '2048'
-  do_sample=True, # optional, default to True
+  do_sample=False, # optional, default to False
   top_p=0.7, # optional, default to '0.7'
   top_k=3, # optional, default to '3'
 )
