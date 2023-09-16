@@ -31,3 +31,8 @@ markers = [
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
+
+[tool.mypy]
+exclude = [
+    'tmp/',
+]

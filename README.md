@@ -34,6 +34,10 @@ result = chat.completion(
 
 ```
 
+### Logging
+
+Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`.
+
 ## Integrations
 
 | Model | State | Note |

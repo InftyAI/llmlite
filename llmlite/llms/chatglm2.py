@@ -1,11 +1,11 @@
 from typing import List
+import logging
 
 from transformers import AutoTokenizer, AutoModel  # type: ignore
 import torch
 
 from llmlite.llms.chat import ASSISTANT_PROMPT, USER_PROMPT, Chat
 from llmlite.llms.messages import ChatMessage
-from llmlite.utils.log import LOGGER
 
 
 class ChatGLMChat(Chat):
@@ -32,6 +32,7 @@ class ChatGLMChat(Chat):
             .cuda()
             .eval()
         )
+        self.logger = logging.getLogger("llmlite.ChatGLMChat")
 
     def validation(self, messages: List[ChatMessage]) -> bool:
         return True
@@ -65,7 +66,7 @@ class ChatGLMChat(Chat):
         top_k: int,
     ) -> str | None:
         prompt = self.prompt(messages)
-        LOGGER.debug(f"ChatGLM prompt: {prompt}")
+        self.logger.debug(f"ChatGLM prompt: {prompt}")
 
         response, _ = self.model.chat(
             self.tokenizer,
