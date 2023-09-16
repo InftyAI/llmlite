@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llmlite"
-version = "0.0.4"
+version = "0.0.5"
 description = "A library helps to chat with all kinds of LLMs consistently."
 authors = ["kerthcet <kerthcet@gmail.com>"]
 license = "MIT License"
@@ -13,7 +13,7 @@ transformers = "4.32.1"
 tokenizers = "0.13.3"
 sentencepiece = "0.1.99"
 torch = "2.0.0"
-pydantic = "^2.3.0"
+pydantic = "<2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
