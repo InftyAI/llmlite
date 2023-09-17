@@ -1,4 +1,5 @@
 from typing import List, no_type_check
+import logging
 
 
 import torch
@@ -8,7 +9,6 @@ from llmlite.llms.chatgpt import ChatGPTChat
 from llmlite.llms.llama2 import LlamaChat
 from llmlite.llms.chatglm2 import ChatGLMChat
 from llmlite.llms.messages import ChatMessage
-from llmlite.utils.log import LOGGER
 from llmlite.apis.utils import general_validations
 
 
@@ -49,6 +49,7 @@ class ChatLLM:
         self.chat = llm(
             model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
         )
+        self.logger = logging.getLogger("llmlite.ChatLLM")
 
     def completion(
         self,
@@ -82,11 +83,11 @@ class ChatLLM:
         """
 
         if not general_validations(messages, self.chat.support_system_prompt()):
-            LOGGER.warning("general validation not passed")
+            self.logger.warning("general validation not passed")
             return None
 
         if not self.chat.validation(messages):
-            LOGGER.warning("model validation not passed")
+            self.logger.warning("model validation not passed")
             return None
 
         res = self.chat.completion(
@@ -97,7 +98,7 @@ class ChatLLM:
             top_p=top_p,
             top_k=top_k,
         )
-        LOGGER.debug(f"Result: {res}")
+        self.logger.debug(f"Result: {res}")
         return res
 
 

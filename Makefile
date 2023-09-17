@@ -1,6 +1,6 @@
 .PHONY: lint
 lint:
-	mypy ./ --exclude tmp
+	mypy .
 	black .
 
 .PHONY: test

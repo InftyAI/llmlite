@@ -1,13 +1,11 @@
-import os
-
 from llmlite.apis import ChatLLM, ChatMessage
+from llmlite.utils.envs import MODEL_PATH
 
 
 # This is help to test more efficiently with models pre-downloaded.
 def build_model(model_name: str) -> str:
-    model_path = os.getenv("MODEL_PATH")
-    if model_path is not None:
-        return model_path + "/" + model_name.lower()
+    if MODEL_PATH is not None:
+        return MODEL_PATH + "/" + model_name.lower()
     return model_name
 
 

@@ -1,4 +1,5 @@
 from typing import List
+import logging
 
 import torch
 import transformers  # type: ignore
@@ -10,8 +11,8 @@ from llmlite.llms.chat import (
     USER_PROMPT,
     LocalChat,
 )
-from llmlite.utils.log import LOGGER
 from llmlite.llms.messages import ChatMessage
+from llmlite.utils.log import logger
 
 
 class LlamaChat(LocalChat):
@@ -47,6 +48,7 @@ class LlamaChat(LocalChat):
             task=task,
             torch_dtype=torch_dtype,
         )
+        self.logger = logging.getLogger("llmlite.LlamaChat")
 
     def validation(self, messages: List[ChatMessage]) -> bool:
         return True
@@ -84,7 +86,7 @@ class LlamaChat(LocalChat):
                 )
 
             else:
-                LOGGER.warning("unavailable instruction role: %s", role)
+                logger.warning("unavailable instruction role: %s", role)
 
         return prompt
 
@@ -98,7 +100,7 @@ class LlamaChat(LocalChat):
         top_k: int,
     ) -> str | None:
         prompt = LlamaChat.prompt(messages)
-        LOGGER.debug(f"Llama prompt: {prompt}")
+        self.logger.debug(f"Llama prompt: {prompt}")
 
         sequences = self.pipeline(
             prompt,
@@ -159,14 +161,6 @@ def build_pipeline(
         model_name_or_path, trust_remote_code=True
     )
     model = LlamaForCausalLM.from_pretrained(model_name_or_path).half().cuda().eval()
-
-    LOGGER.info(
-        "Transformer pipeline with model: %s, task: %s, torch_dtype: %s, model dtype: %s",
-        model_name_or_path,
-        task,
-        torch_dtype,
-        model.dtype,
-    )
 
     return transformers.pipeline(
         task=task,
