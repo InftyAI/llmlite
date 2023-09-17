@@ -91,12 +91,12 @@ Please output `hello world` [/INST] print("hello world") </s><s>[INST] Thanks fo
                 "name": "prompt with both system_prompt and user_prompt",
                 "messages": [
                     ChatMessage(
-                        role=SYSTEM_PROMPT, content="You are a intelligent agent"
+                        role=SYSTEM_PROMPT, content="You are an intelligent agent"
                     ),
                     ChatMessage(role=USER_PROMPT, content="Who you are"),
                 ],
                 "expected": """<s>[INST] <<SYS>>
-You are a intelligent agent
+You are an intelligent agent
 <</SYS>>
 
 Who you are [/INST] """,
@@ -105,13 +105,13 @@ Who you are [/INST] """,
                 "name": "prompt with both system_prompt user_prompt and assistant_prompt",
                 "messages": [
                     ChatMessage(
-                        role=SYSTEM_PROMPT, content="You are a intelligent agent"
+                        role=SYSTEM_PROMPT, content="You are an intelligent agent"
                     ),
                     ChatMessage(role=USER_PROMPT, content="Who you are"),
                     ChatMessage(role=ASSISTANT_PROMPT, content="I'm an agent"),
                 ],
                 "expected": """<s>[INST] <<SYS>>
-You are a intelligent agent
+You are an intelligent agent
 <</SYS>>
 
 Who you are [/INST] I'm an agent </s>""",
@@ -120,7 +120,7 @@ Who you are [/INST] I'm an agent </s>""",
                 "name": "continuous conversation with system_prompt exists",
                 "messages": [
                     ChatMessage(
-                        role=SYSTEM_PROMPT, content="You are a intelligent agent"
+                        role=SYSTEM_PROMPT, content="You are an intelligent agent"
                     ),
                     ChatMessage(role=USER_PROMPT, content="Who you are"),
                     ChatMessage(role=ASSISTANT_PROMPT, content="I'm an agent"),
@@ -128,7 +128,7 @@ Who you are [/INST] I'm an agent </s>""",
                     ChatMessage(role=ASSISTANT_PROMPT, content="Thanks"),
                 ],
                 "expected": """<s>[INST] <<SYS>>
-You are a intelligent agent
+You are an intelligent agent
 <</SYS>>
 
 Who you are [/INST] I'm an agent </s><s>[INST] You're so clever [/INST] Thanks </s>""",

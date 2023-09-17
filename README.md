@@ -5,10 +5,12 @@ A library helps to communicate with all kinds of LLMs consistently.
 ## How to install
 
 ```cmd
-pip install llmlite==0.0.4
+pip install llmlite==0.0.6
 ```
 
 ## How to use
+
+### Chatting
 
 ```python
 from llmlite.apis import ChatLLM, ChatMessage
@@ -32,6 +34,29 @@ result = chat.completion(
 
 #Output: Oh my goodness, a llama in your garden?! 😱 That's quite a surprise! 😅 As an honest assistant, I must inform you that llamas are not typically known for their gardening skills, so it's possible that the llama in your garden may have wandered there accidentally or is seeking shelter. 🐮 ...
 
+```
+
+### Prompting
+
+You can use `llmlite` to help you generate full prompts, for instance:
+
+```python
+from llmlite.apis import LlamaChat
+
+messages = [
+    ChatMessage(role=SYSTEM_PROMPT, content="You are an intelligent agent"),
+    ChatMessage(role=USER_PROMPT, content="Who you are"),
+    ChatMessage(role=ASSISTANT_PROMPT, content="I'm a brilliant agent who can help you a lot"),
+]
+
+LlamaChat.prompt(messages)
+
+#Output:
+# <s>[INST] <<SYS>>
+# You are an intelligent agent
+# <</SYS>>
+
+# Who you are [/INST] I'm a brilliant agent who can help yu a lot</s>
 ```
 
 ### Logging
