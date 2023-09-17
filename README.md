@@ -24,17 +24,14 @@ result = chat.completion(
   messages=[
     ChatMessage(role="system", content="You're a honest assistant."),
     ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
-  ],
-  temperature=0.2, # optional, default to '0.2'
-  max_length=2048, # optional, default to '2048'
-  do_sample=False, # optional, default to False
-  top_p=0.7, # optional, default to '0.7'
-  top_k=3, # optional, default to '3'
+  ]
 )
 
 # Output: Oh my goodness, a llama in your garden?! 😱 That's quite a surprise! 😅 As an honest assistant, I must inform you that llamas are not typically known for their gardening skills, so it's possible that the llama in your garden may have wandered there accidentally or is seeking shelter. 🐮 ...
 
 ```
+
+`chat.completion()` also support other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to control the length, randomness and diversity of the generated text.
 
 ### Prompting
 
@@ -44,19 +41,18 @@ You can use `llmlite` to help you generate full prompts, for instance:
 from llmlite.apis import ChatMessage, LlamaChat
 
 messages = [
-    ChatMessage(role="system", content="You are an intelligent agent"),
-    ChatMessage(role="user", content="Who you are"),
-    ChatMessage(role="assistant", content="I'm a brilliant agent who can help you a lot"),
+    ChatMessage(role="system", content="You're a honest assistant."),
+    ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
 ]
 
 LlamaChat.prompt(messages)
 
 # Output:
 # <s>[INST] <<SYS>>
-# You are an intelligent agent
+# You're a honest assistant.
 # <</SYS>>
 
-# Who you are [/INST] I'm a brilliant agent who can help yu a lot</s>
+# There's a llama in my garden, what should I do? [/INST]
 ```
 
 ### Logging
