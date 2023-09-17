@@ -32,7 +32,7 @@ result = chat.completion(
   top_k=3, # optional, default to '3'
 )
 
-#Output: Oh my goodness, a llama in your garden?! 😱 That's quite a surprise! 😅 As an honest assistant, I must inform you that llamas are not typically known for their gardening skills, so it's possible that the llama in your garden may have wandered there accidentally or is seeking shelter. 🐮 ...
+# Output: Oh my goodness, a llama in your garden?! 😱 That's quite a surprise! 😅 As an honest assistant, I must inform you that llamas are not typically known for their gardening skills, so it's possible that the llama in your garden may have wandered there accidentally or is seeking shelter. 🐮 ...
 
 ```
 
@@ -41,17 +41,17 @@ result = chat.completion(
 You can use `llmlite` to help you generate full prompts, for instance:
 
 ```python
-from llmlite.apis import LlamaChat
+from llmlite.apis import ChatMessage, LlamaChat
 
 messages = [
-    ChatMessage(role=SYSTEM_PROMPT, content="You are an intelligent agent"),
-    ChatMessage(role=USER_PROMPT, content="Who you are"),
-    ChatMessage(role=ASSISTANT_PROMPT, content="I'm a brilliant agent who can help you a lot"),
+    ChatMessage(role="system", content="You are an intelligent agent"),
+    ChatMessage(role="user", content="Who you are"),
+    ChatMessage(role="assistant", content="I'm a brilliant agent who can help you a lot"),
 ]
 
 LlamaChat.prompt(messages)
 
-#Output:
+# Output:
 # <s>[INST] <<SYS>>
 # You are an intelligent agent
 # <</SYS>>
@@ -61,7 +61,7 @@ LlamaChat.prompt(messages)
 
 ### Logging
 
-Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`.
+Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`, others like DEBUG, INFO, WARNING etc..
 
 ## Integrations
 
