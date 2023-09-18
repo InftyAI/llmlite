@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "llmlite"
-version = "0.0.6"
+version = "0.0.7"
 description = "A library helps to chat with all kinds of LLMs consistently."
 authors = ["kerthcet <kerthcet@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 accelerate = "0.22.0"
 transformers = "4.32.1"
 tokenizers = "0.13.3"
