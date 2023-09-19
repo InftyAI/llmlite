@@ -5,7 +5,7 @@ A library helps to communicate with all kinds of LLMs consistently.
 ## How to install
 
 ```cmd
-pip install llmlite==0.0.6
+pip install llmlite==0.0.7
 ```
 
 ## How to use
