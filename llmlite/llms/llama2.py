@@ -12,7 +12,6 @@ from llmlite.llms.chat import (
     LocalChat,
 )
 from llmlite.llms.messages import ChatMessage
-from llmlite.utils.log import logger
 
 
 class LlamaChat(LocalChat):
@@ -43,6 +42,8 @@ class LlamaChat(LocalChat):
         task: str = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
     ) -> None:
+        super().__init__(model_name_or_path, task, torch_dtype)
+
         self.pipeline = build_pipeline(
             model_name_or_path=model_name_or_path,
             task=task,
@@ -50,9 +51,11 @@ class LlamaChat(LocalChat):
         )
         self.logger = logging.getLogger("llmlite.LlamaChat")
 
-    def validation(self, messages: List[ChatMessage]) -> bool:
+    @classmethod
+    def validate(self) -> bool:
         return True
 
+    @classmethod
     def support_system_prompt(self) -> bool:
         return True
 
@@ -86,6 +89,7 @@ class LlamaChat(LocalChat):
                 )
 
             else:
+                logger = logging.getLogger("llmlite.LlamaChat")
                 logger.warning("unavailable instruction role: %s", role)
 
         return prompt

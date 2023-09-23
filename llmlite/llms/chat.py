@@ -17,35 +17,28 @@ class Chat(ABC):
         model_name_or_path: str,
         task: str,
         torch_dtype: torch.dtype,
-    ):
-        pass
+    ) -> None:
+        if not self.validate():
+            raise Exception("Validate error")
 
+    @classmethod
     @abstractmethod
-    def validation(self, messages: List[ChatMessage]) -> bool:
+    def validate(cls) -> bool:
         """
-        validation helps to validate whether the messages is valid or not, e.g. if LLM supports system_prompt,
-        or whether the environment is already, e.g. lack of necessary api keys.
-
-        Args:
-            messages: conversations in list.
+        validation helps to validate whether the environment is already, e.g. lack of necessary api keys.
 
         Returns:
             A boolean value indicates whether the messages is valid or not.
         """
         pass
 
+    @classmethod
     @abstractmethod
     def support_system_prompt(self) -> bool:
         """
         Return:
             A boolean indicates whether support system prompt or not.
         """
-        pass
-
-    # TODO: Support history conversation in the future.
-    @classmethod
-    @abstractmethod
-    def prompt(self, messages: List[ChatMessage]) -> str | None:
         pass
 
     @abstractmethod
@@ -75,12 +68,13 @@ class RemoteChat(Chat):
     RemoteChat is for talking with hosted inference APIs, e.g. ChatGPT, HuggingFace inference APIs.
     """
 
-    pass
-
 
 class LocalChat(Chat):
     """
     LocalChat is for talking with local models.
     """
 
-    pass
+    @classmethod
+    @abstractmethod
+    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+        pass

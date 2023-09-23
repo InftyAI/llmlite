@@ -18,7 +18,9 @@ class ChatGLMChat(Chat):
         model_name_or_path: str,
         task: str = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
-    ):
+    ) -> None:
+        super().__init__(model_name_or_path, task, torch_dtype)
+
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
             trust_remote_code=True,
@@ -34,7 +36,8 @@ class ChatGLMChat(Chat):
         )
         self.logger = logging.getLogger("llmlite.ChatGLMChat")
 
-    def validation(self, messages: List[ChatMessage]) -> bool:
+    @classmethod
+    def validate(self) -> bool:
         return True
 
     @classmethod
