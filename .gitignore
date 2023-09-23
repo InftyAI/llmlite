@@ -7,7 +7,7 @@ __pycache__
 **/__pycache__/
 .mypy_cache/
 .empty/
-.pytest_cache
+.pytest_cache/
 
 /tmp/
 demo.py

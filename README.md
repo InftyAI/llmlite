@@ -10,7 +10,7 @@ pip install llmlite==0.0.7
 
 ## How to use
 
-### Chatting
+### Chat
 
 ```python
 from llmlite.apis import ChatLLM, ChatMessage
@@ -31,7 +31,7 @@ result = chat.completion(
 
 ```
 
-`chat.completion()` also support other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to control the length, randomness and diversity of the generated text.
+`llmlite` also supports other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to help control the length, randomness and diversity of the generated text, see [examples](./examples/) for reference.
 
 ### Prompting
 
@@ -65,7 +65,7 @@ Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`, other
 | ---- | ---- | ---- |
 | Llama-2 | Done ✅ | |
 | ChatGLM2 | Done ✅ | |
-| ChatGPT | WIP ⏳ | [issue#6](https://github.com/InftyAI/ChatLLM/issues/6) |
+| ChatGPT | Done ✅ | |
 | Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
 | Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
 | StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |

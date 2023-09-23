@@ -4,12 +4,12 @@ import logging
 
 import torch
 
+from llmlite.apis.utils import general_validations
 from llmlite.llms.chat import Chat
 from llmlite.llms.chatgpt import ChatGPTChat
 from llmlite.llms.llama2 import LlamaChat
 from llmlite.llms.chatglm2 import ChatGLMChat
 from llmlite.llms.messages import ChatMessage
-from llmlite.apis.utils import general_validations
 
 
 class ChatLLM:
@@ -35,6 +35,11 @@ class ChatLLM:
         model_name_or_path: str,
         task: str = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
+        temperature: float = 0.2,
+        max_length: int = 2048,
+        do_sample: bool = False,
+        top_p: float = 0.7,
+        top_k: int = 3,
     ):
         """
         Args:
@@ -43,22 +48,27 @@ class ChatLLM:
         """
 
         if model_name_or_path == "":
-            raise Exception("model_name_or_path must exist")
+            raise Exception("Error: model_name_or_path must exist")
 
         llm = fetch_llm(model_name_or_path)
         self.chat = llm(
             model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
         )
         self.logger = logging.getLogger("llmlite.ChatLLM")
+        self.temperature = temperature
+        self.max_length = max_length
+        self.do_sample = do_sample
+        self.top_p = top_p
+        self.top_k = top_k
 
     def completion(
         self,
         messages: List[ChatMessage],
-        temperature: float = 0.2,
-        max_length: int = 2048,
-        do_sample: bool = False,
-        top_p: float = 0.7,
-        top_k: int = 3,
+        temperature: float = None,
+        max_length: int = None,
+        do_sample: bool = None,
+        top_p: float = None,
+        top_k: int = None,
     ) -> str | None:
         """
         Args:
@@ -86,17 +96,13 @@ class ChatLLM:
             self.logger.warning("general validation not passed")
             return None
 
-        if not self.chat.validation(messages):
-            self.logger.warning("model validation not passed")
-            return None
-
         res = self.chat.completion(
             messages=messages,
-            temperature=temperature,
-            max_length=max_length,
-            do_sample=do_sample,
-            top_p=top_p,
-            top_k=top_k,
+            temperature=temperature if temperature is not None else self.temperature,
+            max_length=max_length if max_length is not None else self.max_length,
+            do_sample=do_sample if do_sample is not None else self.do_sample,
+            top_p=top_p if top_p is not None else self.top_p,
+            top_k=top_k if top_k is not None else self.top_k,
         )
         self.logger.debug(f"Result: {res}")
         return res
@@ -112,11 +118,11 @@ def fetch_llm(model_name: str) -> Chat:
     if "chatglm2" in model_name:
         return ChatGLMChat
 
-    if "gpt-3.5-turbo" in model_name:
+    if "gpt-3.5-turbo" in model_name or "gpt-4" in model_name:
         return ChatGPTChat
 
     raise UnavailableModelException(
-        "model unavailable, supporting model family: `llama-2`, `chatglm2`, `chatgpt`,"
+        "model unavailable, supporting model family: `llama-2`, `chatglm2`, `gpt-3.5-turbo`,, `gpt-4`"
     )
 
 
