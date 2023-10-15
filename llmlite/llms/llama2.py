@@ -12,6 +12,7 @@ from llmlite.llms.chat import (
     LocalChat,
 )
 from llmlite.llms.messages import ChatMessage
+from llmlite.utils.validation import general_validations
 
 
 class LlamaChat(LocalChat):
@@ -39,28 +40,33 @@ class LlamaChat(LocalChat):
     def __init__(
         self,
         model_name_or_path: str,
-        task: str = "text-generation",
+        task: str | None = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
+        **kwargs,
     ) -> None:
-        super().__init__(model_name_or_path, task, torch_dtype)
+        super().__init__(model_name_or_path, task, torch_dtype, **kwargs)
 
         self.pipeline = build_pipeline(
             model_name_or_path=model_name_or_path,
             task=task,
             torch_dtype=torch_dtype,
+            **kwargs,
         )
         self.logger = logging.getLogger("llmlite.LlamaChat")
 
     @classmethod
-    def validate(self) -> bool:
+    def validate(cls) -> bool:
         return True
 
     @classmethod
-    def support_system_prompt(self) -> bool:
+    def support_system_prompt(cls) -> bool:
         return True
 
     @classmethod
     def prompt(cls, messages: List[ChatMessage]) -> str | None:
+        if not general_validations(messages, cls.support_system_prompt()):
+            return None
+
         has_system_prompt = False
         prompt = None
 
@@ -97,11 +103,7 @@ class LlamaChat(LocalChat):
     def completion(
         self,
         messages: List[ChatMessage],
-        temperature: float,
-        max_length: int,
-        do_sample: bool,
-        top_p: float,
-        top_k: int,
+        **kwargs,
     ) -> str | None:
         prompt = LlamaChat.prompt(messages)
         self.logger.debug(f"Llama prompt: {prompt}")
@@ -109,11 +111,7 @@ class LlamaChat(LocalChat):
         sequences = self.pipeline(
             prompt,
             return_full_text=False,
-            temperature=temperature,
-            max_length=max_length,
-            do_sample=do_sample,
-            top_p=top_p,
-            top_k=top_k,
+            **kwargs,
         )
 
         return sequences[0]["generated_text"]
@@ -158,13 +156,21 @@ def format_llama_prompt(
 
 def build_pipeline(
     model_name_or_path: str,
-    task: str,
+    task: str | None,
     torch_dtype: torch.dtype,
+    **kwargs,
 ) -> transformers.pipeline:
     tokenizer = AutoTokenizer.from_pretrained(
-        model_name_or_path, trust_remote_code=True
+        model_name_or_path,
+        trust_remote_code=True,
+        **kwargs,
     )
-    model = LlamaForCausalLM.from_pretrained(model_name_or_path).half().cuda().eval()
+    model = (
+        LlamaForCausalLM.from_pretrained(model_name_or_path, **kwargs)
+        .half()
+        .cuda()
+        .eval()
+    )
 
     return transformers.pipeline(
         task=task,
@@ -172,4 +178,5 @@ def build_pipeline(
         tokenizer=tokenizer,
         torch_dtype=torch_dtype,
         device=0,
+        **kwargs,
     )

@@ -4,7 +4,7 @@ lint:
 	black .
 
 .PHONY: test
-test: unit-test integration-tests
+test: unit-test integration-test
 
 .PHONY: unit-test
 unit-test: lint

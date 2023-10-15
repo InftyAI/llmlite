@@ -1,10 +1,9 @@
 from llmlite.apis import ChatLLM, ChatMessage
 
+# You should set the OPENAI_API_KEY first.
+
 chat = ChatLLM(
     model_name_or_path="gpt-3.5-turbo",
-    temperature=0.2,  # optional, default to '0.2'
-    max_length=2048,  # optional, default to '2048'
-    top_p=0.7,  # optional, default to '0.7'
 )
 
 result = chat.completion(

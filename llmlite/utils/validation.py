@@ -9,11 +9,13 @@ def general_validations(
     messages: List[ChatMessage], support_system_prompt: bool
 ) -> bool:
     if len(messages) == 0:
-        logger.error("no prompt provided")
+        logger.error("no message provided")
         return False
 
-    if messages[0].role == SYSTEM_PROMPT and not support_system_prompt:
-        logger.error("system prompt not supported")
-        return False
+    if not support_system_prompt:
+        for message in messages:
+            if message.role == SYSTEM_PROMPT:
+                logger.error("system prompt not supported")
+                return False
 
     return True

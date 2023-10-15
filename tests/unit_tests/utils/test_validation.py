@@ -1,4 +1,4 @@
-from llmlite.apis.utils import general_validations
+from llmlite.utils.validation import general_validations
 from llmlite.llms.messages import ChatMessage
 
 
@@ -9,6 +9,7 @@ class TestUtil:
                 "name": "validation passed",
                 "messages": [
                     ChatMessage(role="system", content="You are a intelligent agent"),
+                    ChatMessage(role="user", content="Who you are"),
                 ],
                 "support_system_prompt": True,
                 "expected": True,
@@ -17,6 +18,7 @@ class TestUtil:
                 "name": "don't support system_prompt",
                 "messages": [
                     ChatMessage(role="system", content="You are a intelligent agent"),
+                    ChatMessage(role="user", content="Who you are"),
                 ],
                 "support_system_prompt": False,
                 "expected": False,
