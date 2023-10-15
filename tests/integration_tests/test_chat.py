@@ -1,11 +1,13 @@
+import os
+
 from llmlite.apis import ChatLLM, ChatMessage
-from llmlite.utils.envs import MODEL_PATH
 
 
 # This is help to test more efficiently with models pre-downloaded.
 def build_model(model_name: str) -> str:
-    if MODEL_PATH is not None:
-        return MODEL_PATH + "/" + model_name.lower()
+    path = os.getenv("MODEL_PATH")
+    if path is not None:
+        return path + "/" + model_name.lower()
     return model_name
 
 
@@ -31,6 +33,11 @@ class TestChat:
             chat = ChatLLM(
                 model_name_or_path=tc["model"],
                 task=tc["task"],
+                temperature=0.2,  # optional, default to '0.2'
+                max_length=2048,  # optional, default to '2048'
+                do_sample=True,  # optional, default to False
+                top_p=0.7,  # optional, default to '0.7'
+                top_k=3,  # optional, default to '3'
             )
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0
@@ -51,6 +58,46 @@ class TestChat:
             chat = ChatLLM(
                 model_name_or_path=tc["model"],
                 task=tc["task"],
+                temperature=0.2,  # optional, default to '0.2'
+                max_length=2048,  # optional, default to '2048'
+                do_sample=True,  # optional, default to False
+                top_p=0.7,  # optional, default to '0.7'
+                top_k=3,  # optional, default to '3'
+            )
+            result = chat.completion(messages=tc["messages"])
+            assert len(result) > 0
+
+    def test_chat_with_chatgpt(self):
+        test_cases = [
+            {
+                "name": "test with gpt-3.5-turbo",
+                "model": "gpt-3.5-turbo",
+                "messages": [
+                    ChatMessage(
+                        role="system", content="You're an agent based on fact."
+                    ),
+                    ChatMessage(
+                        role="user", content="How many people are there in China?"
+                    ),
+                ],
+            },
+            {
+                "name": "test with gpt-4",
+                "model": "gpt-4",
+                "messages": [
+                    ChatMessage(
+                        role="system", content="You're an agent based on fact."
+                    ),
+                    ChatMessage(
+                        role="user", content="How many people are there in China?"
+                    ),
+                ],
+            },
+        ]
+
+        for tc in test_cases:
+            chat = ChatLLM(
+                model_name_or_path=tc["model"],
             )
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0

@@ -2,7 +2,7 @@ import pytest
 
 from llmlite.llms.chatglm2 import ChatGLMChat
 from llmlite.llms.llama2 import LlamaChat
-from llmlite.apis.chat import (
+from llmlite.apis.chatllm import (  # type: ignore
     fetch_llm,
     UnavailableModelException,
 )

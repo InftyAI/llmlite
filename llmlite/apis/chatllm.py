@@ -4,7 +4,7 @@ import logging
 
 import torch
 
-from llmlite.apis.utils import general_validations
+from llmlite.utils.validation import general_validations
 from llmlite.llms.chat import Chat
 from llmlite.llms.chatgpt import ChatGPTChat
 from llmlite.llms.llama2 import LlamaChat
@@ -33,13 +33,9 @@ class ChatLLM:
     def __init__(
         self,
         model_name_or_path: str,
-        task: str = "text-generation",
+        task: str | None = None,
         torch_dtype: torch.dtype = torch.float16,
-        temperature: float = 0.2,
-        max_length: int = 2048,
-        do_sample: bool = False,
-        top_p: float = 0.7,
-        top_k: int = 3,
+        **kwargs,
     ):
         """
         Args:
@@ -52,23 +48,17 @@ class ChatLLM:
 
         llm = fetch_llm(model_name_or_path)
         self.chat = llm(
-            model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
+            model_name_or_path=model_name_or_path,
+            task=task,
+            torch_dtype=torch_dtype,
+            **kwargs,
         )
         self.logger = logging.getLogger("llmlite.ChatLLM")
-        self.temperature = temperature
-        self.max_length = max_length
-        self.do_sample = do_sample
-        self.top_p = top_p
-        self.top_k = top_k
 
     def completion(
         self,
         messages: List[ChatMessage],
-        temperature: float = None,
-        max_length: int = None,
-        do_sample: bool = None,
-        top_p: float = None,
-        top_k: int = None,
+        **kwargs,
     ) -> str | None:
         """
         Args:
@@ -98,11 +88,7 @@ class ChatLLM:
 
         res = self.chat.completion(
             messages=messages,
-            temperature=temperature if temperature is not None else self.temperature,
-            max_length=max_length if max_length is not None else self.max_length,
-            do_sample=do_sample if do_sample is not None else self.do_sample,
-            top_p=top_p if top_p is not None else self.top_p,
-            top_k=top_k if top_k is not None else self.top_k,
+            **kwargs,
         )
         self.logger.debug(f"Result: {res}")
         return res

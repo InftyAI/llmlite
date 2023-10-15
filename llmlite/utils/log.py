@@ -1,10 +1,10 @@
 import logging
-
-from llmlite.utils.envs import LOG_LEVEL
+import os
 
 
 def logging_level():
-    return logging.INFO if LOG_LEVEL is None else LOG_LEVEL
+    level = os.getenv("LOG_LEVEL")
+    return logging.INFO if level is None else level
 
 
 logger = logging.getLogger("llmlite")

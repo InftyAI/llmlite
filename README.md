@@ -2,6 +2,17 @@
 
 A library helps to communicate with all kinds of LLMs consistently.
 
+| Model | State | Note |
+| ---- | ---- | ---- |
+| Llama-2 | Done ✅ | |
+| ChatGLM2 | Done ✅ | |
+| ChatGPT | Done ✅ | |
+| CodeLlama | WIP ⏳ | |
+| Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
+| Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
+| StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
+| ... | ... | ... |
+
 ## How to install
 
 ```cmd
@@ -31,7 +42,9 @@ result = chat.completion(
 
 ```
 
-`llmlite` also supports other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to help control the length, randomness and diversity of the generated text, see [examples](./examples/) for reference.
+`llmlite` also supports other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to help control the length, randomness and diversity of the generated text.
+
+See **[examples](./examples/)** for reference.
 
 ### Prompting
 
@@ -58,18 +71,6 @@ LlamaChat.prompt(messages)
 ### Logging
 
 Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`, others like DEBUG, INFO, WARNING etc..
-
-## Integrations
-
-| Model | State | Note |
-| ---- | ---- | ---- |
-| Llama-2 | Done ✅ | |
-| ChatGLM2 | Done ✅ | |
-| ChatGPT | Done ✅ | |
-| Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
-| Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
-| StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
-| ... | ... | ... |
 
 ## Contributions
 

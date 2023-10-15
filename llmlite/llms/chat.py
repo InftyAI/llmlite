@@ -15,8 +15,9 @@ class Chat(ABC):
     def __init__(
         self,
         model_name_or_path: str,
-        task: str,
+        task: str | None,
         torch_dtype: torch.dtype,
+        **kwargs,
     ) -> None:
         if not self.validate():
             raise Exception("Validate error")
@@ -34,7 +35,7 @@ class Chat(ABC):
 
     @classmethod
     @abstractmethod
-    def support_system_prompt(self) -> bool:
+    def support_system_prompt(cls) -> bool:
         """
         Return:
             A boolean indicates whether support system prompt or not.
@@ -45,11 +46,7 @@ class Chat(ABC):
     def completion(
         self,
         messages: List[ChatMessage],
-        temperature: float,
-        max_length: int,
-        do_sample: bool,
-        top_p: float,
-        top_k: int,
+        **kwargs,
     ) -> str | None:
         """
         Args:

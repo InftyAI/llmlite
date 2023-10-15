@@ -36,4 +36,5 @@ filterwarnings = [
 [tool.mypy]
 exclude = [
     'tmp/',
+    'example/',
 ]
