@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llmlite"
-version = "0.0.7"
+version = "0.0.8"
 description = "A library helps to chat with all kinds of LLMs consistently."
 authors = ["kerthcet <kerthcet@gmail.com>"]
 license = "MIT License"
