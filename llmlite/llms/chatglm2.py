@@ -49,7 +49,7 @@ class ChatGLMChat(Chat):
         return False
 
     @classmethod
-    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+    def prompt(cls, messages: List[ChatMessage], **kwargs) -> str | None:
         if not general_validations(messages, cls.support_system_prompt()):
             return None
 

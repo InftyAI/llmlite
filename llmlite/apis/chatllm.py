@@ -9,6 +9,7 @@ from llmlite.llms.chat import Chat
 from llmlite.llms.chatgpt import ChatGPTChat
 from llmlite.llms.llama2 import LlamaChat
 from llmlite.llms.chatglm2 import ChatGLMChat
+from llmlite.llms.codellama import CodeLlamaChat
 from llmlite.llms.messages import ChatMessage
 
 
@@ -107,8 +108,11 @@ def fetch_llm(model_name: str) -> Chat:
     if "gpt-3.5-turbo" in model_name or "gpt-4" in model_name:
         return ChatGPTChat
 
+    if "codellama" in model_name:
+        return CodeLlamaChat
+
     raise UnavailableModelException(
-        "model unavailable, supporting model family: `llama-2`, `chatglm2`, `gpt-3.5-turbo`,, `gpt-4`"
+        "model unavailable, supporting model family: `llama-2`, `codellama`, `chatglm2`, `gpt-3.5-turbo`,, `gpt-4`"
     )
 
 

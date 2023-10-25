@@ -26,8 +26,6 @@ publish: build  export-requirements
 	poetry publish --username=__token__ --password=$(PYPI_TOKEN)
 
 .PHONEY: export-requirements
-export-requirements: export-requirements-dev
+export-requirements:
 	poetry export -f requirements.txt -o requirements.txt --without-hashes
-
-export-requirements-dev:
 	poetry export -f requirements.txt -o requirements-dev.txt --without-hashes --with dev

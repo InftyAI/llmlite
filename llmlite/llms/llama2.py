@@ -63,49 +63,21 @@ class LlamaChat(LocalChat):
         return True
 
     @classmethod
-    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+    def prompt(cls, messages: List[ChatMessage], **kwargs) -> str | None:
         if not general_validations(messages, cls.support_system_prompt()):
             return None
 
-        has_system_prompt = False
-        prompt = None
-
-        for message in messages:
-            role = message.role
-            content = message.content
-
-            if role == SYSTEM_PROMPT:
-                # We only can accept one system prompt.
-                if has_system_prompt:
-                    continue
-
-                prompt = format_llama_prompt(
-                    role=SYSTEM_PROMPT, content=content, history=None
-                )
-                has_system_prompt = True
-
-            elif role == USER_PROMPT:
-                prompt = format_llama_prompt(
-                    role=USER_PROMPT, content=content, history=prompt
-                )
-
-            elif role == ASSISTANT_PROMPT:
-                prompt = format_llama_prompt(
-                    role=ASSISTANT_PROMPT, content=content, history=prompt
-                )
-
-            else:
-                logger = logging.getLogger("llmlite.LlamaChat")
-                logger.warning("unavailable instruction role: %s", role)
-
-        return prompt
+        return get_full_prompts(messages)
 
     def completion(
         self,
         messages: List[ChatMessage],
         **kwargs,
     ) -> str | None:
-        prompt = LlamaChat.prompt(messages)
+        prompt = self.prompt(messages)
+        if prompt is None:
+            return None
+
         self.logger.debug(f"Llama prompt: {prompt}")
 
         sequences = self.pipeline(
@@ -115,6 +87,41 @@ class LlamaChat(LocalChat):
         )
 
         return sequences[0]["generated_text"]
+
+
+def get_full_prompts(messages: List[ChatMessage]):
+    has_system_prompt = False
+    prompt = None
+
+    for message in messages:
+        role = message.role
+        content = message.content
+
+        if role == SYSTEM_PROMPT:
+            # We only can accept one system prompt.
+            if has_system_prompt:
+                continue
+
+            prompt = format_llama_prompt(
+                role=SYSTEM_PROMPT, content=content, history=None
+            )
+            has_system_prompt = True
+
+        elif role == USER_PROMPT:
+            prompt = format_llama_prompt(
+                role=USER_PROMPT, content=content, history=prompt
+            )
+
+        elif role == ASSISTANT_PROMPT:
+            prompt = format_llama_prompt(
+                role=ASSISTANT_PROMPT, content=content, history=prompt
+            )
+
+        else:
+            logger = logging.getLogger("llmlite.LlamaChat")
+            logger.error("unavailable instruction role: %s", role)
+
+    return prompt
 
 
 # TODO: trim the tokens when exceeded.
@@ -140,9 +147,11 @@ def format_llama_prompt(
         if history is None:
             return "<s>[INST] " + content + " [/INST] "
         else:
+            # end with system prompt
             if history.endswith("<</SYS>>\n\n"):
                 return history + content + " [/INST] "
             else:
+                # end with assistant prompt
                 return history + "<s>[INST] " + content + " [/INST] "
 
     if role == ASSISTANT_PROMPT:

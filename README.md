@@ -16,7 +16,7 @@ A library helps to communicate with all kinds of LLMs consistently.
 ## How to install
 
 ```cmd
-pip install llmlite==0.0.8
+pip install llmlite==0.0.9
 ```
 
 ## How to use
