@@ -101,3 +101,36 @@ class TestChat:
             )
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0
+
+    def test_with_codellama(self):
+        test_cases = [
+            {
+                "name": "test with generate mode",
+                "mode": "generate",
+                "messages": [
+                    ChatMessage(role="user", content="def fibonacci("),
+                ],
+            },
+            {
+                "name": "test with instruct mode",
+                "mode": "instruct",
+                "messages": [
+                    ChatMessage(role="system", content="Provide answers in golang"),
+                    ChatMessage(
+                        role="user",
+                        content="Write a function that computes the sum of a given list.",
+                    ),
+                ],
+            },
+        ]
+
+        chat = ChatLLM(
+            model_name_or_path=build_model("meta-llama/codellama-13b-instruct-hf")
+        )
+        for tc in test_cases:
+            result = chat.completion(
+                messages=tc["messages"],
+                promptMode=tc["mode"],
+                max_length=2048,
+            )
+            assert len(result) > 0

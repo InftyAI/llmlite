@@ -73,5 +73,5 @@ class LocalChat(Chat):
 
     @classmethod
     @abstractmethod
-    def prompt(cls, messages: List[ChatMessage]) -> str | None:
+    def prompt(cls, messages: List[ChatMessage], **kwargs) -> str | None:
         pass
