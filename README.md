@@ -7,7 +7,7 @@ A library helps to communicate with all kinds of LLMs consistently.
 | Llama-2 | Done ✅ | |
 | ChatGLM2 | Done ✅ | |
 | ChatGPT | Done ✅ | |
-| CodeLlama | WIP ⏳ | |
+| CodeLlama | Done ✅ | |
 | Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
 | Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
 | StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
