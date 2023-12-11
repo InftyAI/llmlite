@@ -7,7 +7,7 @@ A library helps to communicate with all kinds of LLMs consistently.
 | ChatGPT | Done ✅ | |
 | Llama-2 | Done ✅ | |
 | CodeLlama | Done ✅ | |
-| ChatGLM2 | Done ✅ | |
+| ChatGLM3 | Done ✅ | |
 | Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
 | Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
 | StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
@@ -18,8 +18,8 @@ We're also planning to support different inference backends as below:
 
 | backend | State | Note |
 | ---- | ---- | ---- |
-| [vLLM](https://github.com/vllm-project/vllm) | RoadMap 📋 | [issue#32](https://github.com/InftyAI/llmlite/issues/32) |
-| [text-generation-inference](https://github.com/huggingface/text-generation-inference) | RoadMap 📋 | [issue#35](https://github.com/InftyAI/llmlite/issues/35) |
+| [huggingface](https://github.com/huggingface) | Done ✅ | Default |
+| [vLLM](https://github.com/vllm-project/vllm) | WIP ⏳ | [issue#32](https://github.com/InftyAI/llmlite/issues/32) |
 | ... | ... | ... |
 
 ## How to install

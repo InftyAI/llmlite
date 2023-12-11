@@ -1,12 +1,13 @@
 from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
+    model_name_or_path="/data/models/meta-llama/Llama-2-7b-chat-hf",
     task="text-generation",
-    temperature=0.2,
-    do_sample=True,
-    top_p=0.7,
-    top_k=3,
+    backend="hf",
+    # temperature=0.2,
+    # do_sample=True,
+    # top_p=0.7,
+    # top_k=3,
 )
 
 result = chat.completion(

@@ -10,6 +10,6 @@ __pycache__
 .pytest_cache/
 
 /tmp/
-demo.py
+*demo.py
 
 dist/

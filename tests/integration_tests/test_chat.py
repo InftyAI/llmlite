@@ -33,11 +33,11 @@ class TestChat:
             chat = ChatLLM(
                 model_name_or_path=tc["model"],
                 task=tc["task"],
-                temperature=0.2,  # optional, default to '0.2'
-                max_length=2048,  # optional, default to '2048'
-                do_sample=True,  # optional, default to False
-                top_p=0.7,  # optional, default to '0.7'
-                top_k=3,  # optional, default to '3'
+                # temperature=0.2,  # optional, default to '0.2'
+                # max_length=2048,  # optional, default to '2048'
+                # do_sample=True,  # optional, default to False
+                # top_p=0.7,  # optional, default to '0.7'
+                # top_k=3,  # optional, default to '3'
             )
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0
@@ -58,11 +58,11 @@ class TestChat:
             chat = ChatLLM(
                 model_name_or_path=tc["model"],
                 task=tc["task"],
-                temperature=0.2,  # optional, default to '0.2'
-                max_length=2048,  # optional, default to '2048'
-                do_sample=True,  # optional, default to False
-                top_p=0.7,  # optional, default to '0.7'
-                top_k=3,  # optional, default to '3'
+                # temperature=0.2,  # optional, default to '0.2'
+                # max_length=2048,  # optional, default to '2048'
+                # do_sample=True,  # optional, default to False
+                # top_p=0.7,  # optional, default to '0.7'
+                # top_k=3,  # optional, default to '3'
             )
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0
