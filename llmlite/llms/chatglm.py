@@ -1,15 +1,16 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import logging
 
-from transformers import AutoTokenizer, AutoModel  # type: ignore
+from transformers import AutoTokenizer  # type: ignore
 import torch
 
-from llmlite.llms.chat import Chat
+from llmlite.llms.model import Model
+from llmlite.utils.util import get_class
 from llmlite.llms.messages import ChatMessage
-from llmlite.utils.validation import general_validations
+from llmlite import consts
 
 
-class ChatGLMChat(Chat):
+class ChatGLM(Model):
     """
     ChatGLM is mainly used for chinese questions and answers. Currently don't support system prompt yet.
     """
@@ -17,42 +18,33 @@ class ChatGLMChat(Chat):
     def __init__(
         self,
         model_name_or_path: str,
-        task: str | None = "text-generation",
+        task: Optional[str] = "text-generation",
         torch_dtype: torch.dtype = torch.float16,
-        **kwargs,
     ) -> None:
-        super().__init__(model_name_or_path, task, torch_dtype, **kwargs)
+        super().__init__(model_name_or_path, task, torch_dtype)
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name_or_path,
+    __config__ = {
+        "support_system_prompt": False,
+        "backends": [consts.BACKEND_HF, consts.BACKEND_VLLM],
+        "default_backend": consts.BACKEND_HF,
+        "architecture": "AutoModel",
+    }
+
+    def load_with_hf(self, architecture: str):
+        modelClass = get_class("transformers", architecture)
+
+        self._tokenizer = AutoTokenizer.from_pretrained(
+            self._model_name_or_path,
             trust_remote_code=True,
-            **kwargs,
         )
-        self.model = (
-            AutoModel.from_pretrained(
-                model_name_or_path,
-                trust_remote_code=True,
-                **kwargs,
-            )
-            .half()
-            .cuda()
-            .eval()
+        self._model = (
+            modelClass.from_pretrained(self._model_name_or_path).half().cuda().eval()
         )
+
         self.logger = logging.getLogger("llmlite.ChatGLMChat")
 
     @classmethod
-    def validate(cls) -> bool:
-        return True
-
-    @classmethod
-    def support_system_prompt(cls) -> bool:
-        return False
-
-    @classmethod
     def prompt(cls, messages: List[ChatMessage], **kwargs) -> str | None:
-        if not general_validations(messages, cls.support_system_prompt()):
-            return None
-
         prompt = ""
         query, history = build_history(messages)
 
@@ -67,7 +59,6 @@ class ChatGLMChat(Chat):
     def completion(
         self,
         messages: List[ChatMessage],
-        **kwargs,
     ) -> str | None:
         """
         This is how ChatGLM chat() looks like:
@@ -85,16 +76,13 @@ class ChatGLMChat(Chat):
             logits_processor=None,
             **kwargs,
             )
-
         """
 
         query, history = build_history(messages)
-        kwargs["history"] = history
-
-        response, _ = self.model.chat(
-            self.tokenizer,
+        response, _ = self._model.chat(
+            self._tokenizer,
             query,
-            **kwargs,
+            history=history,
         )
         return response
 

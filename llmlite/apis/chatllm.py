@@ -1,21 +1,15 @@
-from typing import List, no_type_check
+from typing import List, Optional
 import logging
-
 
 import torch
 
-from llmlite.utils.validation import general_validations
-from llmlite.llms.chat import Chat
-from llmlite.llms.chatgpt import ChatGPTChat
-from llmlite.llms.llama2 import LlamaChat
-from llmlite.llms.chatglm2 import ChatGLMChat
-from llmlite.llms.codellama import CodeLlamaChat
+from llmlite import consts
+from llmlite.llms.llm import LLM
 from llmlite.llms.messages import ChatMessage
 
 
 class ChatLLM:
     """
-
     How To Use:
         chat = ChatLLM(
             model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
@@ -34,8 +28,9 @@ class ChatLLM:
     def __init__(
         self,
         model_name_or_path: str,
-        task: str | None = None,
+        task: Optional[str] = None,
         torch_dtype: torch.dtype = torch.float16,
+        backend: str = consts.BACKEND_HF,
         **kwargs,
     ):
         """
@@ -45,15 +40,22 @@ class ChatLLM:
         """
 
         if model_name_or_path == "":
-            raise Exception("Error: model_name_or_path must exist")
+            raise Exception("model_name_or_path must exist")
 
-        llm = fetch_llm(model_name_or_path)
-        self.chat = llm(
+        if backend not in [
+            consts.BACKEND_ENDPOINT,
+            consts.BACKEND_HF,
+            consts.BACKEND_HF,
+        ]:
+            raise Exception("backend not support")
+
+        self._llm = LLM.from_pretrained(
             model_name_or_path=model_name_or_path,
             task=task,
             torch_dtype=torch_dtype,
-            **kwargs,
+            backend=backend,
         )
+
         self.logger = logging.getLogger("llmlite.ChatLLM")
 
     def completion(
@@ -83,42 +85,6 @@ class ChatLLM:
             Sentences of string type.
         """
 
-        if not general_validations(messages, self.chat.support_system_prompt()):
-            self.logger.warning("general validation not passed")
-            return None
-
-        res = self.chat.completion(
-            messages=messages,
-            **kwargs,
-        )
+        res = self._llm.completion(messages=messages)
         self.logger.debug(f"Result: {res}")
         return res
-
-
-@no_type_check
-def fetch_llm(model_name: str) -> Chat:
-    model_name = model_name.lower()
-
-    if "llama-2" in model_name:
-        return LlamaChat
-
-    if "chatglm2" in model_name:
-        return ChatGLMChat
-
-    if "gpt-3.5-turbo" in model_name or "gpt-4" in model_name:
-        return ChatGPTChat
-
-    if "codellama" in model_name:
-        return CodeLlamaChat
-
-    raise UnavailableModelException(
-        "model unavailable, supporting model family: `llama-2`, `codellama`, `chatglm2`, `gpt-3.5-turbo`,, `gpt-4`"
-    )
-
-
-class UnavailableModelException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return self.message

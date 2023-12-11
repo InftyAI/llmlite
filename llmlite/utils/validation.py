@@ -1,6 +1,6 @@
 from typing import List
 
-from llmlite.llms.chat import SYSTEM_PROMPT
+from llmlite import consts
 from llmlite.llms.messages import ChatMessage
 from llmlite.utils.log import logger
 
@@ -14,7 +14,7 @@ def general_validations(
 
     if not support_system_prompt:
         for message in messages:
-            if message.role == SYSTEM_PROMPT:
+            if message.role == consts.SYSTEM_PROMPT:
                 logger.error("system prompt not supported")
                 return False
 
