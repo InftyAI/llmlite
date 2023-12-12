@@ -9,12 +9,13 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 accelerate = "0.22.0"
-transformers = "4.33.1"
-tokenizers = "0.13.3"
+transformers = "4.34.0"
 sentencepiece = "0.1.99"
-torch = "2.0.0"
 pydantic = "<2"
 openai = "^0.28.0"
+vllm = "0.2.3"
+tokenizers = "0.14"
+torch = "^2.1.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"

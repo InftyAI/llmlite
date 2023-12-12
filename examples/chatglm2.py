@@ -1,8 +1,9 @@
 from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="THUDM/chatglm2-6b",
+    model_name_or_path="/workspace/models/thudm/chatglm2-6b",
     task="text-generation",
+    backend="vllm",
     # temperature=0.2,
     # max_length=2048,
     # do_sample=True,

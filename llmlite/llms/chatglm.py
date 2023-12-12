@@ -78,6 +78,11 @@ class ChatGLM(Model):
             )
         """
 
+        if self._hf_backend == False:
+            prompt = self.prompt(messages)
+            response = self._backend.completion(prompt)
+            return response
+        
         query, history = build_history(messages)
         response, _ = self._model.chat(
             self._tokenizer,

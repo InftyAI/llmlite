@@ -1,6 +1,7 @@
 from typing import Optional
 
 import torch
+from vllm import LLM 
 
 from llmlite.backends.backend import Backend
 
@@ -13,4 +14,9 @@ class VLLMBackend(Backend):
         torch_dtype: torch.dtype,
         pretrained_model_name: str,
     ):
-        pass
+        self._vllm = LLM(model=model_name_or_path,trust_remote_code=True)
+
+    def completion(self, content: str) -> Optional[str]:
+        sequences = self._vllm.generate([content])
+        
+        return sequences[0].outputs[0].text
