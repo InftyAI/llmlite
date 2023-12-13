@@ -78,7 +78,7 @@ class ChatGLM(Model):
             )
         """
 
-        if self._hf_backend == False:
+        if self.hf_backend_flag == False:
             prompt = self.prompt(messages)
             response = self._backend.completion(prompt)
             return response
