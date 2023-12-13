@@ -4,6 +4,7 @@ import torch
 
 from llmlite.llms.messages import ChatMessage
 from llmlite.backends.hf_backend import HFBackend
+from llmlite.backends.vllm_backend import VLLMBackend
 
 
 class Model:
@@ -43,7 +44,14 @@ class Model:
         self,
         architecture: str,
     ):
-        pass
+        self.hf_backend_flag = False
+        
+        self._backend = VLLMBackend(
+            self._model_name_or_path,
+            self._task,
+            self._torch_dtype,
+            architecture,
+        )
 
     def completion(self, messages: List[ChatMessage]) -> Optional[str]:
         if self._backend is None:

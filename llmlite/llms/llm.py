@@ -43,14 +43,15 @@ class LLM:
 
         model = llm_class(model_name_or_path, task, torch_dtype)
 
-        architecture = model.get_config("architecture")
-        if architecture is None:
-            raise Exception("architecture not exists in config")
-
         backend = get_backend(backend, arch)
+        
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
             return model
+
+        architecture = model.get_config("architecture")
+        if architecture is None:
+            raise Exception("architecture not exists in config")        
 
         if backend == consts.BACKEND_HF:
             model.load_with_hf(architecture)

@@ -45,7 +45,7 @@ class ChatLLM:
         if backend not in [
             consts.BACKEND_ENDPOINT,
             consts.BACKEND_HF,
-            consts.BACKEND_HF,
+            consts.BACKEND_VLLM,
         ]:
             raise Exception("backend not support")
 
