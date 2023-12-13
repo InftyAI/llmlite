@@ -44,6 +44,7 @@ class LLM:
         model = llm_class(model_name_or_path, task, torch_dtype)
 
         backend = get_backend(backend, arch)
+        
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
             return model
