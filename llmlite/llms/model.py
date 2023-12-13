@@ -44,7 +44,8 @@ class Model:
         self,
         architecture: str,
     ):
-        self._hf_backend = False
+        self.hf_backend_flag = False
+        
         self._backend = VLLMBackend(
             self._model_name_or_path,
             self._task,
