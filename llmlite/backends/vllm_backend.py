@@ -14,7 +14,7 @@ class VLLMBackend(Backend):
         torch_dtype: torch.dtype,
         pretrained_model_name: str,
     ):
-        self._vllm = LLM(model=model_name_or_path,trust_remote_code=True)
+        self._vllm = LLM(model=model_name_or_path, trust_remote_code=True)
 
     def completion(self, content: str) -> Optional[str]:
         sequences = self._vllm.generate([content])
