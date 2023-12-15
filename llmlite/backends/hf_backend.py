@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union, List
 
 import transformers  # type: ignore
 from transformers import AutoTokenizer, AutoConfig
@@ -39,7 +39,10 @@ class HFBackend(Backend):
             **kwargs,
         )
 
-    def completion(self, content: str) -> Optional[str]:
+    def completion(self, content: Union[str, List[str]]) -> Optional[Union[str, List[str]]]:
+        if type(content) == List[str]:
+            raise Exception("have not support")
+
         sequences = self._pipeline(
             content,
             return_full_text=False,

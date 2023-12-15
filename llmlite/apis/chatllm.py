@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 import logging
 
 from llmlite import consts
@@ -55,9 +55,9 @@ class ChatLLM:
 
     def completion(
         self,
-        messages: List[ChatMessage],
+        messages: Union[List[ChatMessage], List[List[ChatMessage]]],
         **kwargs,
-    ) -> str | None:
+    ) -> Optional[Union[str, List[str]]]:
         """
         Args:
             messages: A list of conversations looks like below:
@@ -79,6 +79,11 @@ class ChatLLM:
         Returns:
             Sentences of string type.
         """
+        print(messages)
+        print(type(messages))
+        if type(messages[0]) != list:
+            messages=[messages]
+            print(messages)
 
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")

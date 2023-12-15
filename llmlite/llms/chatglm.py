@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Tuple, Dict, Any, Union
 import logging
 
 from transformers import AutoTokenizer  # type: ignore
@@ -67,9 +67,9 @@ class ChatGLM(Model):
 
     def completion(
         self,
-        messages: List[ChatMessage],
+        messages: List[List[ChatMessage]],
         **kwargs,
-    ) -> Optional[str]:
+    ) -> Optional[Union[str, List[str]]]:
         """
         This is how ChatGLM chat() looks like:
 
@@ -89,7 +89,12 @@ class ChatGLM(Model):
         """
 
         if self.version == chatglm2 and self.backend == consts.BACKEND_HF:
-            query, history = build_history(messages)
+            if len(messages) == 1:
+                query, history = build_history(messages[0])
+            elif len(messages) > 1:
+                # TODO
+                raise Exception("have not support")
+
             response, _ = self.model.chat(
                 self.tokenizer,
                 query,
@@ -99,7 +104,12 @@ class ChatGLM(Model):
 
         # TODO: support vllm
         if self.version == chatglm2 and self.backend == consts.BACKEND_VLLM:
-            prompt = self.prompt(messages)
+            if len(messages) == 1:
+                prompt = self.prompt(messages[0])
+            elif len(messages) > 1:
+                prompt = []
+                for mes in messages:
+                    prompt.append(self.prompt(mes))
             response = self.backend_runtime.completion(prompt)
             return response
 
@@ -109,8 +119,9 @@ class ChatGLM(Model):
         if self.version == chatglm3 and self.backend == consts.BACKEND_VLLM:
             pass
 
+
     def prompt(
-        cls,
+        self,
         messages: List[ChatMessage],
     ) -> Optional[str]:
 
