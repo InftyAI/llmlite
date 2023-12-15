@@ -1,9 +1,9 @@
 from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="/workspace/models/meta-llama/llama-2-7b-chat-hf",
+    model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
     task="text-generation",
-    backend="vllm",
+    # backend="vllm",
     # temperature=0.2,
     # do_sample=True,
     # top_p=0.7,

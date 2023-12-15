@@ -1,22 +1,17 @@
 import os
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import logging
 
-import torch
 import openai  # type: ignore
 
 from llmlite.llms.messages import ChatMessage
 from llmlite.llms.model import Model
+from llmlite import consts
 
 
 class ChatGPT(Model):
-    def __init__(
-        self,
-        model_name_or_path: str,
-        task: Optional[str],
-        torch_dtype: torch.dtype = torch.float16,
-    ):
-        super().__init__(model_name_or_path, task, torch_dtype)
+    def __init__(self, model_name_or_path: str, **kwargs: Dict[str, Any]) -> None:
+        super().__init__(model_name_or_path, **kwargs)
 
         self.logger = logging.getLogger("llmlite.ChatGPTChat")
 
@@ -32,11 +27,14 @@ class ChatGPT(Model):
 
     __config__ = {
         "support_system_prompt": True,
+        "default_backend": consts.BACKEND_ENDPOINT,
+        "architecture": "GPT",
     }
 
     def completion(
         self,
         messages: List[ChatMessage],
+        **kwargs,
     ) -> Optional[str]:
         inputs = []
         for message in messages:

@@ -1,10 +1,8 @@
 from typing import List, Optional
 import logging
 
-import torch
-
 from llmlite import consts
-from llmlite.llms.llm import LLM
+from llmlite.llms.llm import LLM, get_model_info
 from llmlite.llms.messages import ChatMessage
 
 
@@ -28,8 +26,6 @@ class ChatLLM:
     def __init__(
         self,
         model_name_or_path: str,
-        task: Optional[str] = None,
-        torch_dtype: torch.dtype = torch.float16,
         backend: str = consts.BACKEND_HF,
         **kwargs,
     ):
@@ -51,9 +47,8 @@ class ChatLLM:
 
         self._llm = LLM.from_pretrained(
             model_name_or_path=model_name_or_path,
-            task=task,
-            torch_dtype=torch_dtype,
             backend=backend,
+            **kwargs,
         )
 
         self.logger = logging.getLogger("llmlite.ChatLLM")
@@ -85,6 +80,13 @@ class ChatLLM:
             Sentences of string type.
         """
 
-        res = self._llm.completion(messages=messages)
+        res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")
         return res
+
+    @classmethod
+    def prompt(
+        cls, model_name_or_path: str, messages: List[ChatMessage], **kwargs
+    ) -> Optional[str]:
+        model_class, version, backend = get_model_info(model_name_or_path)
+        return model_class.prompt(messages, **kwargs)

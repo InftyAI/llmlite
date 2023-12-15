@@ -1,9 +1,8 @@
 from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
-    model_name_or_path="/workspace/models/thudm/chatglm2-6b",
-    task="text-generation",
-    backend="vllm",
+    model_name_or_path="THUDM/chatglm2-6b",
+    # backend="vllm",
     # temperature=0.2,
     # max_length=2048,
     # do_sample=True,
@@ -11,6 +10,7 @@ chat = ChatLLM(
     # top_k=3,
 )
 
+# chatglm2 doesn't support system prompt
 result = chat.completion(
     messages=[
         ChatMessage(role="user", content="中国共有多少人口？"),
