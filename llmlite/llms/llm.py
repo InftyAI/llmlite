@@ -1,19 +1,16 @@
-from typing import Optional
-
-import torch
-
 from llmlite import consts
 from llmlite.llms.chatglm import ChatGLM
 from llmlite.llms.llama import Llama
 from llmlite.llms.chatgpt import ChatGPT
+from llmlite.utils import util
 
 
 # TODO: loading the configs automatically or construct a register function.
 class LLMStore:
     LLMs = {
-        consts.ARCH_LLAMA: Llama,
-        consts.ARCH_GPT: ChatGPT,
-        consts.ARCH_CHATGLM: ChatGLM,
+        consts.MODEL_TYPE_LLAMA: Llama,
+        consts.MODEL_TYPE_GPT: ChatGPT,
+        consts.MODEL_TYPE_CHATGLM: ChatGLM,
     }
 
 
@@ -22,9 +19,8 @@ class LLM:
     def from_pretrained(
         cls,
         model_name_or_path: str,
-        task: Optional[str],
-        torch_dtype: torch.dtype,
         backend: str,
+        **kwargs,
     ):
         """
         from_pretrained helps to load the model in advance, we support 3 backends right now:
@@ -36,75 +32,34 @@ class LLM:
         - vllm: no longer need to implement the logic since vllm does everything for you if the
           model is supported by vllm already.
         """
-        arch = get_model_arch(model_name_or_path)
-        llm_class = LLMStore.LLMs.get(arch, None)
-        if llm_class is None:
-            raise Exception("llm not exists")
 
-        model = llm_class(model_name_or_path, task, torch_dtype)
+        model_class, _, backend = get_model_info(backend, model_name_or_path)
 
-        backend = get_backend(backend, arch)
-        
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
-            return model
-
-        architecture = model.get_config("architecture")
-        if architecture is None:
-            raise Exception("architecture not exists in config")        
+            return model_class
 
         if backend == consts.BACKEND_HF:
-            model.load_with_hf(architecture)
-            return model
+            return model_class.load_with_hf(model_name_or_path, **kwargs)
 
         if backend == consts.BACKEND_VLLM:
-            model.load_with_vllm(architecture)
-            return model
+            return model_class.load_with_vllm(model_name_or_path, **kwargs)
 
         raise Exception("unsupported backend: %s", backend)
 
 
-def get_backend(backend: str, arch: str) -> str:
-    # TODO: this should be set manually, make it automatically.
-    if arch in [consts.ARCH_GPT]:
-        return consts.BACKEND_ENDPOINT
+def get_model_info(backend: str, model_name_or_path: str):
+    model_type, version = util.parse_model_name(model_name_or_path)
 
-    llm_class = LLMStore.LLMs[arch]
-    if llm_class is None:
+    model_class = LLMStore.LLMs.get(model_type, None)
+    if model_class is None:
         raise Exception("llm not exists")
-    support_backends = llm_class.get_config("backends")  # type: ignore
 
-    if backend in support_backends:
-        return backend
+    support_backends = model_class.get_config("backends")  # type: ignore
+    if backend not in support_backends:
+        # fallback to default backend
+        backend = model_class.get_config("default_backend", None)  # type: ignore
+        if backend is None:
+            raise Exception("no default backend set")
 
-    # fallback to default backend
-    default_backend = llm_class.get_config("default_backend")  # type: ignore
-    if default_backend is None:
-        raise Exception("no default backend set")
-
-    return default_backend
-
-
-def get_model_arch(model_name: str) -> str:
-    model_name = model_name.lower()
-
-    if "llama" in model_name:
-        return consts.ARCH_LLAMA
-
-    if "chatglm" in model_name:
-        return consts.ARCH_CHATGLM
-
-    if "gpt-3.5" in model_name or "gpt-4" in model_name:
-        return consts.ARCH_GPT
-
-    raise UnavailableModelException(
-        "model unavailable, supporting model family: `llama`,, `chatglm`, `chatgpt`"
-    )
-
-
-class UnavailableModelException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return self.message
+    return model_class, version, backend

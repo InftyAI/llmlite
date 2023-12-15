@@ -1,9 +1,6 @@
 import logging
 from typing import List, Optional
 
-import torch
-
-
 from llmlite import consts
 from llmlite.llms.messages import ChatMessage
 from llmlite.llms.model import Model
@@ -32,10 +29,9 @@ class Llama(Model):
     def __init__(
         self,
         model_name_or_path: str,
-        task: Optional[str] = "text-generation",
-        torch_dtype: torch.dtype = torch.float16,
+        **kwargs,
     ) -> None:
-        super().__init__(model_name_or_path, task, torch_dtype)
+        super().__init__(model_name_or_path, **kwargs)
 
     __config__ = {
         "support_system_prompt": True,
@@ -45,7 +41,12 @@ class Llama(Model):
     }
 
     @classmethod
-    def prompt(cls, messages: List[ChatMessage]) -> Optional[str]:
+    def prompt(
+        cls,
+        model_name_or_path: str,
+        messages: List[ChatMessage],
+        **kwargs,
+    ) -> Optional[str]:
         has_system_prompt = False
         prompt = None
 
@@ -80,7 +81,6 @@ class Llama(Model):
         return prompt
 
 
-# TODO: trim the tokens when exceeded.
 def format_llama_prompt(
     role: str,
     content: str,

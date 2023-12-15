@@ -4,10 +4,10 @@ BACKEND_VLLM = "vllm"
 BACKEND_ENDPOINT = "ep"  # endpoint
 
 # Model architecture
-ARCH_BAICHUAN = "baichuan"
-ARCH_CHATGLM = "chatglm"
-ARCH_GPT = "chatgpt"
-ARCH_LLAMA = "llama"
+MODEL_TYPE_BAICHUAN = "baichuan"
+MODEL_TYPE_CHATGLM = "chatglm"
+MODEL_TYPE_GPT = "chatgpt"
+MODEL_TYPE_LLAMA = "llama"
 
 # Prompt type
 SYSTEM_PROMPT = "system"
