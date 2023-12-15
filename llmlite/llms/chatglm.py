@@ -99,7 +99,9 @@ class ChatGLM(Model):
 
         # TODO: support vllm
         if self.version == chatglm2 and self.backend == consts.BACKEND_VLLM:
-            pass
+            prompt = self.prompt(messages)
+            response = self.backend_runtime.completion(prompt)
+            return response
 
         # TODO: support chatglm3
         if self.version == chatglm3 and self.backend == consts.BACKEND_HF:
@@ -107,19 +109,13 @@ class ChatGLM(Model):
         if self.version == chatglm3 and self.backend == consts.BACKEND_VLLM:
             pass
 
-    @classmethod
     def prompt(
         cls,
-        model_name_or_path: str,
         messages: List[ChatMessage],
-        **kwargs,
     ) -> Optional[str]:
-        super().prompt(model_name_or_path, messages, **kwargs)
-
-        _, version = util.parse_model_name(model_name_or_path)
 
         # TODO: how vllm support conversion chatglm.
-        if version == chatglm2:
+        if self.version == chatglm2:
             prompt = ""
             query, history = build_history(messages)
 
@@ -132,7 +128,7 @@ class ChatGLM(Model):
             return prompt
 
         # TODO: support chatglm3
-        if version == chatglm3:
+        if self.version == chatglm3:
             return None
 
 
