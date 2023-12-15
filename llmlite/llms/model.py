@@ -33,11 +33,11 @@ class Model:
         model_name_or_path: str,
         **kwargs: Dict[str, Any],
     ):
-        arch = cls.__config__.get("architecture", None)
+        arch = cls.get_config("architecture")
         if arch is None:
             raise Exception("architecture not exists")
 
-        backend = HFBackend(
+        backend_runtime = HFBackend(
             model_name_or_path,
             arch,
             **kwargs,
@@ -45,7 +45,7 @@ class Model:
 
         config_args = {
             "backend": consts.BACKEND_HF,
-            "backend_runtime": backend,
+            "backend_runtime": backend_runtime,
         }
         return cls(model_name_or_path, **config_args)
 
@@ -57,11 +57,11 @@ class Model:
         model_name_or_path: str,
         **kwargs: Dict[str, Any],
     ):
-        arch = cls.__config__.get("architecture", None)
+        arch = cls.get_config("architecture")
         if arch is None:
             raise Exception("architecture not exists")
 
-        backend = VLLMBackend(
+        backend_runtime = VLLMBackend(
             model_name_or_path,
             arch,
             **kwargs,
@@ -69,7 +69,7 @@ class Model:
 
         config_args = {
             "backend": consts.BACKEND_VLLM,
-            "backend_runtime": backend,
+            "backend_runtime": backend_runtime,
         }
         return cls(model_name_or_path, **config_args)
 
@@ -83,6 +83,14 @@ class Model:
 
         generated_text = self.backend_runtime.completion(prompt)
         return generated_text
+
+    def validation(self, messages: List[ChatMessage]) -> bool:
+        if (
+            not self.get_config("support_system_prompt")
+            and len(messages) > 0
+            and messages[0].role == consts.SYSTEM_PROMPT
+        ):
+            raise Exception("system prompt not supported yet")
 
     @classmethod
     def prompt(

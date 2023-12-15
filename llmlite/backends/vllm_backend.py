@@ -9,7 +9,6 @@ class VLLMBackend(Backend):
     def __init__(
         self,
         model_name_or_path: str,
-        architecture: str,
         **kwargs,
     ):
         trust_remote_code = kwargs.pop("trust_remote_code", True)

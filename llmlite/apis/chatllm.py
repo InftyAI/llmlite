@@ -80,6 +80,7 @@ class ChatLLM:
             Sentences of string type.
         """
 
+        self._llm.validation(messages)
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")
         return res

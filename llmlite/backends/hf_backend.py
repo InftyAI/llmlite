@@ -4,7 +4,8 @@ import transformers  # type: ignore
 from transformers import AutoTokenizer, AutoConfig
 
 from llmlite.backends.backend import Backend
-from llmlite.utils.util import get_class
+
+# from llmlite.utils.util import get_class
 
 
 class HFBackend(Backend):
@@ -16,26 +17,25 @@ class HFBackend(Backend):
     ):
         task = kwargs.pop("task", None)
         trust_remote_code = kwargs.pop("trust_remote_code", True)
-        device = kwargs.pop("device", 0)
         torch_dtype = kwargs.pop("torch_dtype", None)
 
-        model_class = get_class("transformers", architecture)
+        # model_class = get_class("transformers", architecture)
 
         tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
             trust_remote_code=trust_remote_code,
         )
-        model = model_class.from_pretrained(model_name_or_path).half().cuda().eval()
+        # model = model_class.from_pretrained(model_name_or_path).half().cuda().eval()
         config = AutoConfig.from_pretrained(model_name_or_path)
 
         self._pipeline = transformers.pipeline(
             task=task,
-            model=model,
+            model=model_name_or_path,
             tokenizer=tokenizer,
             config=config,
             torch_dtype=torch_dtype,
             trust_remote_code=trust_remote_code,
-            device=device,
+            device_map="auto",
             **kwargs,
         )
 

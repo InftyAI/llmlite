@@ -40,14 +40,14 @@ class ChatGLM(Model):
         if arch is None:
             raise Exception("architecture not exists")
 
-        modelClass = get_class("transformers", arch)
+        model_class = get_class("transformers", arch)
 
         tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
             trust_remote_code=trust_remote_code,
         )
         model = (
-            modelClass.from_pretrained(
+            model_class.from_pretrained(
                 model_name_or_path,
                 trust_remote_code=trust_remote_code,
                 **kwargs,
