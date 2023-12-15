@@ -13,7 +13,7 @@ def get_class(module_name, class_name):
 def parse_model_name(model_name: str) -> Tuple[str, float]:
     model_name = model_name.lower()
 
-    if "llama-2" in model_name:
+    if "llama-2" or "codellama" in model_name:
         return consts.MODEL_TYPE_LLAMA, 2
 
     if "chatglm2" in model_name:

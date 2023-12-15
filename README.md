@@ -82,6 +82,12 @@ LlamaChat.prompt(messages)
 
 Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`, others like DEBUG, INFO, WARNING etc..
 
+## Roadmap
+
+- Adapter support
+- Quantization
+- Streaming
+
 ## Contributions
 
 🚀 All kinds of contributions are welcomed ! Please follow [Contributing](/CONTRIBUTING.md).
