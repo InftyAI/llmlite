@@ -79,11 +79,9 @@ class ChatLLM:
         Returns:
             Sentences of string type.
         """
-        print(messages)
-        print(type(messages))
+        
         if type(messages[0]) != list:
             messages=[messages]
-            print(messages)
 
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")

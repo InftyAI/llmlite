@@ -40,11 +40,9 @@ class Llama(Model):
         "architecture": "LlamaForCausalLM",
     }
 
-    @classmethod
     def prompt(
-        cls,
+        self,
         messages: List[ChatMessage],
-        **kwargs,
     ) -> Optional[str]:
         has_system_prompt = False
         prompt = None

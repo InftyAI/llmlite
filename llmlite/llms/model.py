@@ -79,8 +79,6 @@ class Model:
         
         prompt = []
         if len(messages) == 1:
-            print(messages)
-            print(messages[0])
             prompt = self.prompt(messages[0])
         elif len(messages) > 1:
             for mes in messages:
@@ -91,9 +89,8 @@ class Model:
         generated_text = self.backend_runtime.completion(prompt)
         return generated_text
 
-    @classmethod
     def prompt(
-        cls, messages: List[ChatMessage], **kwargs
+        self, messages: List[ChatMessage]
     ) -> Optional[str]:
         """
         You should implement the prompt additionally because different model
