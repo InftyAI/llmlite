@@ -45,6 +45,8 @@ class ChatLLM:
         ]:
             raise Exception("backend not support")
 
+        _, _, self.used_backend = get_model_info(model_name_or_path)
+
         self._llm = LLM.from_pretrained(
             model_name_or_path=model_name_or_path,
             backend=backend,
@@ -82,6 +84,8 @@ class ChatLLM:
         
         if type(messages[0]) != list:
             messages=[messages]
+        else:
+            assert self.used_backend == consts.BACKEND_VLLM, "the backend does not support batching"
 
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")

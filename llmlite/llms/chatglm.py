@@ -93,7 +93,7 @@ class ChatGLM(Model):
                 query, history = build_history(messages[0])
             elif len(messages) > 1:
                 # TODO
-                raise Exception("have not support")
+                raise Exception("the backend does not support batching")
 
             response, _ = self.model.chat(
                 self.tokenizer,
