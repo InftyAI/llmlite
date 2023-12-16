@@ -93,7 +93,7 @@ class Model:
 
     @classmethod
     def prompt(
-        cls, model_name_or_path: str, messages: List[ChatMessage], **kwargs
+        cls, messages: List[ChatMessage], **kwargs
     ) -> Optional[str]:
         """
         You should implement the prompt additionally because different model

@@ -43,7 +43,6 @@ class Llama(Model):
     @classmethod
     def prompt(
         cls,
-        model_name_or_path: str,
         messages: List[ChatMessage],
         **kwargs,
     ) -> Optional[str]:
