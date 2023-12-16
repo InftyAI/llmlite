@@ -45,7 +45,7 @@ class ChatLLM:
         ]:
             raise Exception("backend not support")
 
-        _, _, self.used_backend = get_model_info(model_name_or_path)
+        _, _, self.used_backend = get_model_info(backend, model_name_or_path)
 
         self._llm = LLM.from_pretrained(
             model_name_or_path=model_name_or_path,
