@@ -2,19 +2,19 @@
 
 A library helps to communicate with all kinds of LLMs consistently.
 
-| Model | State | Note |
-| ---- | ---- | ---- |
-| ChatGPT | Done ✅ | |
-| Llama-2 | Done ✅ | |
-| CodeLlama | Done ✅ | |
-| ChatGLM2 | Done ✅ | |
-| Baichuan2 | Done ✅ | |
-| ChatGLM3 | WIP ⏳ | |
-| Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
-| Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
-| StableLM | RoadMap 📋 | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
-| Baichuan2 | RoadMap 📋 | [issue#34](https://github.com/InftyAI/llmlite/issues/34)
-| ... | ... | ... |
+| Model | State | System Prompt | Note |
+| ---- | ---- | ---- | ---- |
+| ChatGPT | Done ✅ | Yes | |
+| Llama-2 | Done ✅ | Yes | |
+| CodeLlama | Done ✅ | Yes | |
+| ChatGLM2 | Done ✅ | No | |
+| ChatGLM3 | WIP ⏳ | Yes | |
+| Baichuan2 | Done ✅ | Yes | |
+| Claude-2 | RoadMap 📋 | | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
+| Falcon | RoadMap 📋 | | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
+| StableLM | RoadMap 📋 | | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
+| Baichuan2 | RoadMap 📋 | | [issue#34](https://github.com/InftyAI/llmlite/issues/34)
+| ... | ... | ... | ... |
 
 We're also planning to support different inference backends as below:
 
@@ -39,7 +39,7 @@ from llmlite.apis import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
-    task="text-generation", # optional, default to 'text-generation'
+    task="text-generation",
     )
 
 result = chat.completion(
