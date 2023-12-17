@@ -93,7 +93,7 @@ class ChatLLM:
 
     @classmethod
     def prompt(
-        cls, model_name_or_path: str, messages: List[ChatMessage], **kwargs
+            cls, model_name_or_path: str, messages: List[ChatMessage], backend: str, **kwargs
     ) -> Optional[str]:
         model_class, version, backend = get_model_info(backend, model_name_or_path)
         return model_class.prompt(model_name_or_path, messages, **kwargs)
