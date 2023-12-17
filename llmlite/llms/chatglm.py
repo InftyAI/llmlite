@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Tuple, Dict, Any, Union
 import logging
 
 from transformers import AutoTokenizer  # type: ignore
@@ -69,7 +69,7 @@ class ChatGLM(Model):
         self,
         messages: List[ChatMessage],
         **kwargs,
-    ) -> Optional[str]:
+    ) -> Optional[Union[str, List[str]]]:
         """
         This is how ChatGLM chat() looks like:
 
@@ -99,7 +99,11 @@ class ChatGLM(Model):
 
         # TODO: support vllm
         if self.version == chatglm2 and self.backend == consts.BACKEND_VLLM:
-            pass
+            prompt = []
+            for message in messages:
+                prompt.append(self.prompt(self.model_name_or_path, message))
+            response = self.backend_runtime.completion(prompt)
+            return response
 
         # TODO: support chatglm3
         if self.version == chatglm3 and self.backend == consts.BACKEND_HF:

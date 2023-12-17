@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from vllm import LLM as vllm
 
@@ -18,6 +18,9 @@ class VLLMBackend(Backend):
             **kwargs,
         )
 
-    def completion(self, content: str) -> Optional[str]:
-        sequences = self._model.generate([content])
-        return sequences[0].outputs[0].text
+    def completion(self, content: List[str]) -> Optional[List[str]]:
+        sequences = self._model.generate[content)
+        response = []
+        for seq in sequences:
+            response.append(seq.outputs[0].txt)
+        return response   

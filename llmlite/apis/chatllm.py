@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 import logging
 
 from llmlite import consts
@@ -45,17 +45,17 @@ class ChatLLM:
         ]:
             raise Exception("backend not support")
 
-        self._llm = LLM.from_pretrained(
-            model_name_or_path=model_name_or_path,
-            backend=backend,
-            **kwargs,
-        )
+        self.backend, self._llm = LLM.from_pretrained(
+                model_name_or_path=model_name_or_path,
+                backend=backend,
+                **kwargs,
+                )
 
         self.logger = logging.getLogger("llmlite.ChatLLM")
 
     def completion(
         self,
-        messages: List[ChatMessage],
+        messages: Union[List[ChatMessage], List[List[ChatMessage]]],
         **kwargs,
     ) -> str | None:
         """
@@ -79,8 +79,14 @@ class ChatLLM:
         Returns:
             Sentences of string type.
         """
-
-        self._llm.validation(messages)
+        
+        if type(messages[0]) == List:
+            assert self.backend == consts.BACKEND_VLLM, "the message should be processed by vllm backend"
+            for mes in messages:
+                self._llm.validation(mes)
+        else:
+            assert self.backend !=consts.BACKEND_VLLM, "the message can not be processed by vllm backend"
+            self._llm.validation(messages)
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")
         return res
@@ -89,5 +95,5 @@ class ChatLLM:
     def prompt(
         cls, model_name_or_path: str, messages: List[ChatMessage], **kwargs
     ) -> Optional[str]:
-        model_class, version, backend = get_model_info(model_name_or_path)
-        return model_class.prompt(messages, **kwargs)
+        model_class, version, backend = get_model_info(backend, model_name_or_path)
+        return model_class.prompt(model_name_or_path, messages, **kwargs)

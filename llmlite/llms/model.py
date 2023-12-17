@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 
 from llmlite.llms.messages import ChatMessage
 from llmlite.backends.hf_backend import HFBackend
@@ -73,11 +73,17 @@ class Model:
         }
         return cls(model_name_or_path, **config_args)
 
-    def completion(self, messages: List[ChatMessage], **kwargs) -> Optional[str]:
+    def completion(self, messages: Union[List[ChatMessage], List[List[ChatMessage]]], **kwargs) -> Optional[Union[str, List[str]]]:
         if self.backend_runtime is None:
             raise Exception("Please implement the completion() additionally.")
 
-        prompt = self.prompt(self.model_name_or_path, messages, **kwargs)
+        prompt = []
+        if type(messages[0]) == list:
+            prompt = self.prompt(self.model_name_or_path, messages, **kwargs)
+        else:
+            for message in messages:
+                mes = self.prompt(self.model_name_or_path, messages, **kwargs)
+                prompt.append(mes)
         if prompt is None:
             return None
 

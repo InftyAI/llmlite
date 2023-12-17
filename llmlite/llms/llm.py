@@ -37,13 +37,13 @@ class LLM:
 
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
-            return model_class
+            return backend, model_class
 
         if backend == consts.BACKEND_HF:
-            return model_class.load_with_hf(model_name_or_path, **kwargs)
+            return backend, model_class.load_with_hf(model_name_or_path, **kwargs)
 
         if backend == consts.BACKEND_VLLM:
-            return model_class.load_with_vllm(model_name_or_path, **kwargs)
+            return backend, model_class.load_with_vllm(model_name_or_path, **kwargs)
 
         raise Exception("unsupported backend: %s", backend)
 
