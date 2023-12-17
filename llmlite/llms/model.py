@@ -19,11 +19,11 @@ class Model:
         self.__dict__.update(kwargs)
 
     # Each model should have its own configuration.
-    __config__ = Dict[str, Any]
+    __config__ = {}
 
     @classmethod
     def get_config(cls, key: str) -> Any:
-        return cls.__config__.get(key, None)
+        return cls.__config__.get(key)
 
     # You should implement this if the model has a different architecture or has not supported
     # by huggingface pipeline yet. Also, you should implement the completion() the same time.
@@ -85,12 +85,20 @@ class Model:
         return generated_text
 
     def validation(self, messages: List[ChatMessage]) -> bool:
-        if (
-            not self.get_config("support_system_prompt")
-            and len(messages) > 0
-            and messages[0].role == consts.SYSTEM_PROMPT
-        ):
-            raise Exception("system prompt not supported yet")
+        assert len(messages) > 0, "messages should not be empty"
+        assert (
+            messages[-1].role == consts.USER_PROMPT
+        ), "last message should be user prompt"
+
+        if self.get_config("support_system_prompt"):
+            for i, msg in enumerate(messages):
+                if msg.role == consts.SYSTEM_PROMPT:
+                    assert i == 0, "system prompt should be in the first role"
+        else:
+            for msg in messages:
+                assert msg.role != consts.SYSTEM_PROMPT, "system prompt not supported"
+
+        return True
 
     @classmethod
     def prompt(

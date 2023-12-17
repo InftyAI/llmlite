@@ -1,4 +1,5 @@
 from llmlite import consts
+from llmlite.llms.baichuan import Baichuan
 from llmlite.llms.chatglm import ChatGLM
 from llmlite.llms.llama import Llama
 from llmlite.llms.chatgpt import ChatGPT
@@ -11,6 +12,7 @@ class LLMStore:
         consts.MODEL_TYPE_LLAMA: Llama,
         consts.MODEL_TYPE_GPT: ChatGPT,
         consts.MODEL_TYPE_CHATGLM: ChatGLM,
+        consts.MODEL_TYPE_BAICHUAN: Baichuan,
     }
 
 

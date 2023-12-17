@@ -36,7 +36,7 @@ class ChatGLM(Model):
     ):
         trust_remote_code = kwargs.pop("trust_remote_code", True)
 
-        arch = cls.__config__.get("architecture", None)
+        arch = cls.get_config("architecture")
         if arch is None:
             raise Exception("architecture not exists")
 
@@ -123,7 +123,7 @@ class ChatGLM(Model):
             prompt = ""
             query, history = build_history(messages)
 
-            # This is inspired by /root/.cache/huggingface/modules/transformers_modules/chatglm2-6b/tokenization_chatglm.py::build_prompt().
+            # This is inspired by https://huggingface.co/THUDM/chatglm2-6b/blob/main/tokenization_chatglm.py#build_prompt()
             for i, (old_query, response) in enumerate(history):
                 prompt += "[Round {}]\n\n问：{}\n\n答：{}\n\n".format(
                     i + 1, old_query, response

@@ -2,7 +2,7 @@
 name = "llmlite"
 version = "0.0.9"
 description = "A library helps to chat with all kinds of LLMs consistently."
-authors = ["kerthcet <kerthcet@gmail.com>"]
+authors = ["InftyAI"]
 license = "MIT License"
 readme = "README.md"
 
