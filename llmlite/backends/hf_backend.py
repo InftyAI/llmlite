@@ -44,5 +44,4 @@ class HFBackend(Backend):
             content,
             return_full_text=False,
         )
-
         return sequences[0]["generated_text"]

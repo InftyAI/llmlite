@@ -8,6 +8,7 @@ A library helps to communicate with all kinds of LLMs consistently.
 | Llama-2 | Done ✅ | |
 | CodeLlama | Done ✅ | |
 | ChatGLM2 | Done ✅ | |
+| Baichuan2 | Done ✅ | |
 | ChatGLM3 | WIP ⏳ | |
 | Claude-2 | RoadMap 📋 | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
 | Falcon | RoadMap 📋 | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
