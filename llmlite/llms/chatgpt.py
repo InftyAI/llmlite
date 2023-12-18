@@ -28,7 +28,6 @@ class ChatGPT(Model):
     __config__ = {
         "support_system_prompt": True,
         "default_backend": consts.BACKEND_ENDPOINT,
-        "architecture": "GPT",
     }
 
     def completion(
@@ -41,8 +40,9 @@ class ChatGPT(Model):
             inputs.append({"role": message.role, "content": message.content})
 
         completion = openai.ChatCompletion.create(
-            model=self._model_name_or_path,
+            model=self.model_name_or_path,
             messages=inputs,
+            **kwargs,
         )
 
         return completion.choices[0].message.content

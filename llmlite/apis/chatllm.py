@@ -11,7 +11,7 @@ class ChatLLM:
     How To Use:
         chat = ChatLLM(
             model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
-            task="text-generation", # optional, default to 'text-generation'
+            task="text-generation", # optional
             )
 
         result = chat.completion(
@@ -79,8 +79,7 @@ class ChatLLM:
         Returns:
             Sentences of string type.
         """
-
-        self._llm.validation(messages)
+        self._llm.validation(messages=messages)
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")
         return res

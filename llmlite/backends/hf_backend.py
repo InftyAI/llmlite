@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoConfig
 
 from llmlite.backends.backend import Backend
 
-# from llmlite.utils.util import get_class
+# from llmlite.utils import util
 
 
 class HFBackend(Backend):
@@ -15,16 +15,17 @@ class HFBackend(Backend):
         architecture: str,
         **kwargs,
     ):
-        task = kwargs.pop("task", None)
+        task = kwargs.pop("task")
         trust_remote_code = kwargs.pop("trust_remote_code", True)
-        torch_dtype = kwargs.pop("torch_dtype", None)
+        device_map = kwargs.pop("device_map", "auto")
 
-        # model_class = get_class("transformers", architecture)
+        # model_class = util.get_class("transformers", architecture)
 
         tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
             trust_remote_code=trust_remote_code,
         )
+        # TODO: remove this if model path is already supported
         # model = model_class.from_pretrained(model_name_or_path).half().cuda().eval()
         config = AutoConfig.from_pretrained(model_name_or_path)
 
@@ -33,15 +34,15 @@ class HFBackend(Backend):
             model=model_name_or_path,
             tokenizer=tokenizer,
             config=config,
-            torch_dtype=torch_dtype,
             trust_remote_code=trust_remote_code,
-            device_map="auto",
+            device_map=device_map,
             **kwargs,
         )
 
-    def completion(self, content: str) -> Optional[str]:
+    def completion(self, content: str, **kwargs) -> Optional[str]:
         sequences = self._pipeline(
             content,
             return_full_text=False,
+            **kwargs,
         )
         return sequences[0]["generated_text"]

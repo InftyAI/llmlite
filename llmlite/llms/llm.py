@@ -39,7 +39,7 @@ class LLM:
 
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
-            return model_class
+            return model_class(model_name_or_path, **kwargs)
 
         if backend == consts.BACKEND_HF:
             return model_class.load_with_hf(model_name_or_path, **kwargs)
@@ -58,9 +58,9 @@ def get_model_info(backend: str, model_name_or_path: str):
         raise Exception("llm not exists")
 
     support_backends = model_class.get_config("backends")  # type: ignore
-    if backend not in support_backends:
+    if support_backends is None or backend not in support_backends:
         # fallback to default backend
-        backend = model_class.get_config("default_backend", None)  # type: ignore
+        backend = model_class.get_config("default_backend")  # type: ignore
         if backend is None:
             raise Exception("no default backend set")
 
