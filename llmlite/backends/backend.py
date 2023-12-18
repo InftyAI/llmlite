@@ -11,5 +11,5 @@ class Backend(ABC):
         pass
 
     @abstractmethod
-    def completion(self, content: str) -> Optional[str]:
+    def completion(self, content: str, **kwargs) -> Optional[str]:
         pass

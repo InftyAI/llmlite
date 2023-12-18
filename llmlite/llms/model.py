@@ -81,7 +81,7 @@ class Model:
         if prompt is None:
             return None
 
-        generated_text = self.backend_runtime.completion(prompt)
+        generated_text = self.backend_runtime.completion(prompt, **kwargs)
         return generated_text
 
     def validation(self, messages: List[ChatMessage]) -> bool:

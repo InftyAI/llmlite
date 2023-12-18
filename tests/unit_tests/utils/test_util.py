@@ -32,7 +32,7 @@ class TestValidation:
             {
                 "name": "parse baichuan2",
                 "model_name": "Baichuan2-13B-Chat",
-                "want_model_type": consts.MODEL_TYPE_CHATGLM,
+                "want_model_type": consts.MODEL_TYPE_BAICHUAN,
                 "want_version": 2,
             },
             {

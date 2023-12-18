@@ -40,7 +40,7 @@ class TestChat:
                 top_k=3,
             )
             result = chat.completion(messages=tc["messages"])
-            assert len(result) > 0
+            assert len(result) > 0, "got result: " + result
 
     def test_with_chatglm(self):
         test_cases = [
@@ -98,20 +98,18 @@ class TestChat:
                 model_name_or_path=tc["model"],
             )
             result = chat.completion(messages=tc["messages"])
-            assert len(result) > 0
+            assert len(result) > 0, "got result: " + result
 
     def test_with_codellama(self):
         test_cases = [
             {
                 "name": "test with only user prompt",
-                "mode": "generate",
                 "messages": [
                     ChatMessage(role="user", content="def fibonacci("),
                 ],
             },
             {
                 "name": "test with system prompt exists",
-                "mode": "instruct",
                 "messages": [
                     ChatMessage(role="system", content="Provide answers in golang"),
                     ChatMessage(
@@ -123,21 +121,22 @@ class TestChat:
         ]
 
         chat = ChatLLM(
-            model_name_or_path=build_model("codellama/codellama-13b-instruct-hf"),
+            model_name_or_path=build_model("codellama/CodeLlama-13b-instruct-hf"),
+            task="text-generation",
         )
         for tc in test_cases:
             result = chat.completion(
                 messages=tc["messages"],
                 max_length=2048,
             )
-            assert len(result) > 0
+            assert len(result) > 0, "got result: " + result
 
     def test_with_baichuan(self):
         test_cases = [
             {
                 "name": "enable system prompt",
                 "messages": [
-                    ChatMessage(role="system", content="请尽可能详细的描述答案"),
+                    ChatMessage(role="system", content="请用诗词形容"),
                     ChatMessage(role="user", content="中国共有多少人口？"),
                 ],
             },

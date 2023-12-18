@@ -35,6 +35,8 @@ class ChatGLM(Model):
         **kwargs: Dict[str, Any],
     ):
         trust_remote_code = kwargs.pop("trust_remote_code", True)
+        # Task is not required by ChatGLM, or we'll report error.
+        _ = kwargs.pop("task", None)
 
         arch = cls.get_config("architecture")
         if arch is None:
