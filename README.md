@@ -20,8 +20,8 @@ We're also planning to support different inference backends as below:
 
 | backend | State | Note |
 | ---- | ---- | ---- |
-| [huggingface](https://github.com/huggingface) | Done ✅ | Default |
-| [vLLM](https://github.com/vllm-project/vllm) | WIP ⏳ | [issue#32](https://github.com/InftyAI/llmlite/issues/32) |
+| [huggingface](https://github.com/huggingface) | Done ✅ | Support by huggingface pipeline |
+| [vLLM](https://github.com/vllm-project/vllm) | Done ✅ | |
 | ... | ... | ... |
 
 ## How to install
