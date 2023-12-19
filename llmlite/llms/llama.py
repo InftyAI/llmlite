@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from llmlite import consts
 from llmlite.llms.messages import ChatMessage
@@ -29,9 +29,10 @@ class Llama(Model):
     def __init__(
         self,
         model_name_or_path: str,
+        backend: str,
         **kwargs,
     ) -> None:
-        super().__init__(model_name_or_path, **kwargs)
+        super().__init__(model_name_or_path, backend, **kwargs)
 
     __config__ = {
         "support_system_prompt": True,
@@ -39,6 +40,17 @@ class Llama(Model):
         "default_backend": consts.BACKEND_HF,
         "architecture": "LlamaForCausalLM",
     }
+
+    @classmethod
+    def load_with_hf(
+        cls,
+        model_name_or_path: str,
+        **kwargs: Dict[str, Any],
+    ):
+        # Llama requires task, default to "text-generation".
+        if kwargs.get("task", None) is None:
+            kwargs.update({"task": "text-generation"})
+        return super().load_with_hf(model_name_or_path, **kwargs)
 
     @classmethod
     def prompt(

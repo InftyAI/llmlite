@@ -15,7 +15,7 @@ class HFBackend(Backend):
         architecture: str,
         **kwargs,
     ):
-        task = kwargs.pop("task")
+        task = kwargs.pop("task", None)
         trust_remote_code = kwargs.pop("trust_remote_code", True)
         device_map = kwargs.pop("device_map", "auto")
 

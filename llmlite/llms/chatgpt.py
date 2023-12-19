@@ -11,22 +11,23 @@ from llmlite import consts
 
 class ChatGPT(Model):
     def __init__(self, model_name_or_path: str, **kwargs: Dict[str, Any]) -> None:
-        super().__init__(model_name_or_path, **kwargs)
+        super().__init__(model_name_or_path, consts.BACKEND_ENDPOINT, **kwargs)
 
-        self.logger = logging.getLogger("llmlite.ChatGPTChat")
+        self._logger = logging.getLogger("llmlite.ChatGPTChat")
 
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        self.endpoint = os.getenv("OPENAI_ENDPOINT")
+        self._api_key = os.getenv("OPENAI_API_KEY")
+        self._endpoint = os.getenv("OPENAI_ENDPOINT")
 
-        if self.api_key is None or self.api_key == "":
+        if self._api_key is None or self._api_key == "":
             raise Exception("no OPENAI_API_KEY provided")
 
-        openai.api_key = self.api_key
-        if self.endpoint is not None:
-            openai.api_base = self.endpoint
+        openai.api_key = self._api_key
+        if self._endpoint is not None:
+            openai.api_base = self._endpoint
 
     __config__ = {
         "support_system_prompt": True,
+        "backends": [consts.BACKEND_ENDPOINT],
         "default_backend": consts.BACKEND_ENDPOINT,
     }
 
@@ -40,7 +41,7 @@ class ChatGPT(Model):
             inputs.append({"role": message.role, "content": message.content})
 
         completion = openai.ChatCompletion.create(
-            model=self.model_name_or_path,
+            model=self._model_name_or_path,
             messages=inputs,
             **kwargs,
         )

@@ -1,4 +1,4 @@
-from llmlite.llms.baichuan import Baichuan
+from llmlite.apis import ChatLLM
 from llmlite import consts
 from llmlite.llms.messages import ChatMessage
 
@@ -51,5 +51,5 @@ class TestBaichuan:
         ]
 
         for tc in test_cases:
-            got = Baichuan.prompt("fake-model-path", tc["messages"])
+            got = ChatLLM.prompt("baichuan2", tc["messages"])
             assert got == tc["expected"], "failed in case: " + tc["name"]

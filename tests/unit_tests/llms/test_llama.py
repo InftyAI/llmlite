@@ -1,4 +1,5 @@
-from llmlite.llms.llama import Llama, format_llama_prompt
+from llmlite.llms.llama import format_llama_prompt
+from llmlite.apis import ChatLLM
 from llmlite import consts
 from llmlite.llms.messages import ChatMessage
 
@@ -164,5 +165,5 @@ Who you are [/INST] I'm an agent </s><s>[INST] You're so clever [/INST] Thanks <
         ]
 
         for tc in test_cases:
-            got = Llama.prompt(tc["messages"])
+            got = ChatLLM.prompt("llama-2", tc["messages"])
             assert got == tc["expected"]

@@ -1,4 +1,5 @@
-from llmlite.llms.chatglm import ChatGLM, build_history
+from llmlite.llms.chatglm import build_history
+from llmlite.apis import ChatLLM
 from llmlite import consts
 from llmlite.llms.messages import ChatMessage
 
@@ -61,5 +62,5 @@ class TestChatGLM:
         ]
 
         for tc in test_cases:
-            got = ChatGLM.prompt(tc["messages"])
+            got = ChatLLM.prompt("chatglm2", tc["messages"])
             assert got == tc["expected"]
