@@ -1,3 +1,4 @@
+from typing import Optional
 from llmlite import consts
 from llmlite.llms.baichuan import Baichuan
 from llmlite.llms.chatglm import ChatGLM
@@ -21,7 +22,7 @@ class LLM:
     def from_pretrained(
         cls,
         model_name_or_path: str,
-        backend: str,
+        backend: Optional[str],
         **kwargs,
     ):
         """
@@ -35,7 +36,8 @@ class LLM:
           model is supported by vllm already.
         """
 
-        model_class, _, backend = get_model_info(backend, model_name_or_path)
+        model_class, _ = get_model_info(model_name_or_path)
+        backend = get_backend(model_name_or_path, backend)
 
         # We can call the API directly, no need to load the model.
         if backend == consts.BACKEND_ENDPOINT:
@@ -50,18 +52,27 @@ class LLM:
         raise Exception("unsupported backend: %s", backend)
 
 
-def get_model_info(backend: str, model_name_or_path: str):
+# TODO: add tests
+def get_model_info(model_name_or_path: str):
     model_type, version = util.parse_model_name(model_name_or_path)
 
     model_class = LLMStore.LLMs.get(model_type, None)
-    if model_class is None:
-        raise Exception("llm not exists")
+    assert model_class is not None, "llm not exists"
+
+    return model_class, version
+
+
+# TODO: add tests
+def get_backend(model_name_or_path: str, backend: Optional[str]) -> str:
+    model_class, _ = get_model_info(model_name_or_path)
+
+    if backend is None:
+        backend = model_class.get_config("default_backend")
+        assert backend is not None, "default backend not configured"
 
     support_backends = model_class.get_config("backends")  # type: ignore
-    if support_backends is None or backend not in support_backends:
-        # fallback to default backend
-        backend = model_class.get_config("default_backend")  # type: ignore
-        if backend is None:
-            raise Exception("no default backend set")
+    assert support_backends is not None and backend in support_backends, (
+        "only supported backends: " + support_backends
+    )
 
-    return model_class, version, backend
+    return backend

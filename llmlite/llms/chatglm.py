@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Tuple, Dict, Any, Union
 import logging
 
 from transformers import AutoTokenizer  # type: ignore
@@ -18,8 +18,13 @@ class ChatGLM(Model):
     ChatGLM is mainly used for chinese questions and answers. Currently don't support system prompt yet.
     """
 
-    def __init__(self, model_name_or_path: str, **kwargs: Dict[str, Any]) -> None:
-        super().__init__(model_name_or_path, **kwargs)
+    def __init__(
+        self,
+        model_name_or_path: str,
+        backend: str,
+        **kwargs: Dict[str, Any],
+    ) -> None:
+        super().__init__(model_name_or_path, backend, **kwargs)
 
     __config__ = {
         "support_system_prompt": False,
@@ -60,18 +65,17 @@ class ChatGLM(Model):
         )
 
         config_args = {
-            "backend": consts.BACKEND_HF,
             "tokenizer": tokenizer,
             "model": model,
             "logger": logging.getLogger("llmlite.ChatGLM"),
         }
-        return cls(model_name_or_path, **config_args)
+        return cls(model_name_or_path, consts.BACKEND_HF, **config_args)
 
     def completion(
         self,
         messages: List[ChatMessage],
         **kwargs,
-    ) -> Optional[str]:
+    ) -> Optional[Union[str, List[str]]]:
         """
         This is how ChatGLM chat() looks like:
 
@@ -90,23 +94,27 @@ class ChatGLM(Model):
             )
         """
 
-        if self.version == chatglm2 and self.backend == consts.BACKEND_HF:
+        if self._version == chatglm2 and self._backend == consts.BACKEND_HF:
             query, history = build_history(messages)
-            response, _ = self.model.chat(
-                self.tokenizer,
+            response, _ = self._model.chat(
+                self._tokenizer,
                 query,
                 history=history,
             )
             return response
 
         # TODO: support vllm
-        if self.version == chatglm2 and self.backend == consts.BACKEND_VLLM:
-            pass
+        if self._version == chatglm2 and self._backend == consts.BACKEND_VLLM:
+            prompt = []
+            for message in messages:
+                prompt.append(self.prompt(self._model_name_or_path, message))
+            response = self._backend_runtime.completion(prompt)
+            return response
 
         # TODO: support chatglm3
-        if self.version == chatglm3 and self.backend == consts.BACKEND_HF:
+        if self._version == chatglm3 and self._backend == consts.BACKEND_HF:
             pass
-        if self.version == chatglm3 and self.backend == consts.BACKEND_VLLM:
+        if self._version == chatglm3 and self._backend == consts.BACKEND_VLLM:
             pass
 
     @classmethod

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 import logging
 
 from llmlite import consts
@@ -26,7 +26,7 @@ class ChatLLM:
     def __init__(
         self,
         model_name_or_path: str,
-        backend: str = consts.BACKEND_HF,
+        backend: str = None,
         **kwargs,
     ):
         """
@@ -39,6 +39,7 @@ class ChatLLM:
             raise Exception("model_name_or_path must exist")
 
         if backend not in [
+            None,
             consts.BACKEND_ENDPOINT,
             consts.BACKEND_HF,
             consts.BACKEND_VLLM,
@@ -55,9 +56,9 @@ class ChatLLM:
 
     def completion(
         self,
-        messages: List[ChatMessage],
+        messages: Union[List[ChatMessage], List[List[ChatMessage]]],
         **kwargs,
-    ) -> str | None:
+    ) -> Optional[Union[str, List[str]]]:
         """
         Args:
             messages: A list of conversations looks like below:
@@ -65,7 +66,6 @@ class ChatLLM:
                     ChatMessage(role="system", content="You are a helpful assistant."),
                     ChatMessage(role="user", content="Who won the world series in 2020?"),
                     ChatMessage(role="assistant", content="The Los Angeles Dodgers won the World Series in 2020."),
-                    ChatMessage(role="user", content="Where was it played?"),
                 ]
 
             We have three types of `roles` here:
@@ -77,9 +77,11 @@ class ChatLLM:
             Note: The indexes of the messages are following the sequence of conversations.
 
         Returns:
-            Sentences of string type.
+            Sentences of string type or a list of string type sentences, this will only happen with vLLM backend.
         """
+
         self._llm.validation(messages=messages)
+
         res = self._llm.completion(messages=messages, **kwargs)
         self.logger.debug(f"Result: {res}")
         return res
@@ -88,5 +90,5 @@ class ChatLLM:
     def prompt(
         cls, model_name_or_path: str, messages: List[ChatMessage], **kwargs
     ) -> Optional[str]:
-        model_class, version, backend = get_model_info(model_name_or_path)
-        return model_class.prompt(messages, **kwargs)
+        model_class, _ = get_model_info(model_name_or_path)
+        return model_class.prompt(model_name_or_path, messages, **kwargs)

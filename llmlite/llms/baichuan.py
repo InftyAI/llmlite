@@ -14,12 +14,17 @@ assistant_token = "<reserved_107>"
 
 
 class Baichuan(Model):
-    def __init__(self, model_name_or_path: str, **kwargs: Dict[str, Any]) -> None:
-        super().__init__(model_name_or_path, **kwargs)
+    def __init__(
+        self,
+        model_name_or_path: str,
+        backend: str,
+        **kwargs: Dict[str, Any],
+    ) -> None:
+        super().__init__(model_name_or_path, backend, **kwargs)
 
     __config__ = {
         "support_system_prompt": True,
-        "backends": [consts.BACKEND_HF, consts.BACKEND_VLLM],
+        "backends": [consts.BACKEND_HF],
         "default_backend": consts.BACKEND_HF,
         "architecture": "AutoModelForCausalLM",
     }
@@ -56,12 +61,11 @@ class Baichuan(Model):
         model.generation_config = GenerationConfig.from_pretrained(model_name_or_path)
 
         config_args = {
-            "backend": consts.BACKEND_HF,
             "model": model,
             "tokenizer": tokenizer,
             "logger": logging.getLogger("llmlite.Baichuan"),
         }
-        return cls(model_name_or_path, **config_args)
+        return cls(model_name_or_path, consts.BACKEND_HF, **config_args)
 
     def completion(
         self,
@@ -71,7 +75,7 @@ class Baichuan(Model):
         inputs = []
         for msg in messages:
             inputs.append({"role": msg.role, "content": msg.content})
-        response = self.model.chat(self.tokenizer, inputs)
+        response = self._model.chat(self._tokenizer, inputs)
         return response
 
     @classmethod
@@ -83,7 +87,7 @@ class Baichuan(Model):
     ) -> Optional[str]:
         super().prompt(model_name_or_path, messages, **kwargs)
 
-        # This is mostly inspired by https://huggingface.co/baichuan-inc/Baichuan2-7B-Chat/blob/main/generation_utils.py
+        # This is inspired by https://huggingface.co/baichuan-inc/Baichuan2-7B-Chat/blob/main/generation_utils.py
         system_prompt = None
 
         if len(messages) > 0 and messages[0].role == consts.SYSTEM_PROMPT:

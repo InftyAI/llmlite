@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 
 from llmlite.llms.messages import ChatMessage
 from llmlite.backends.hf_backend import HFBackend
@@ -11,15 +11,22 @@ class Model:
     def __init__(
         self,
         model_name_or_path: str,
+        backend: str,
         **kwargs: Dict[str, Any],
     ) -> None:
-        self.model_name_or_path = model_name_or_path
-        _, self.version = util.parse_model_name(model_name_or_path)
+        self._model_name_or_path = model_name_or_path
+        self._backend = backend
+        _, self._version = util.parse_model_name(model_name_or_path)
 
-        self.__dict__.update(kwargs)
+        updates = {"_" + k: v for k, v in kwargs.items()}
+        self.__dict__.update(updates)
 
     # Each model should have its own configuration.
     __config__ = {}
+
+    @property
+    def backend(self) -> str:
+        return self._backend
 
     @classmethod
     def get_config(cls, key: str) -> Any:
@@ -43,11 +50,11 @@ class Model:
             **kwargs,
         )
 
-        config_args = {
-            "backend": consts.BACKEND_HF,
-            "backend_runtime": backend_runtime,
-        }
-        return cls(model_name_or_path, **config_args)
+        return cls(
+            model_name_or_path,
+            backend=consts.BACKEND_HF,
+            backend_runtime=backend_runtime,
+        )
 
     # You should implement this if the model has a different architecture or has not supported
     # by huggingface pipeline yet. Also, you should implement the completion() the same time.
@@ -63,42 +70,68 @@ class Model:
 
         backend_runtime = VLLMBackend(
             model_name_or_path,
-            arch,
             **kwargs,
         )
 
-        config_args = {
-            "backend": consts.BACKEND_VLLM,
-            "backend_runtime": backend_runtime,
-        }
-        return cls(model_name_or_path, **config_args)
+        return cls(
+            model_name_or_path,
+            backend=consts.BACKEND_VLLM,
+            backend_runtime=backend_runtime,
+        )
 
-    def completion(self, messages: List[ChatMessage], **kwargs) -> Optional[str]:
-        if self.backend_runtime is None:
-            raise Exception("Please implement the completion() additionally.")
+    def completion(
+        self, messages: Union[List[ChatMessage], List[List[ChatMessage]]], **kwargs
+    ) -> Optional[Union[str, List[str]]]:
+        if self._backend == consts.BACKEND_HF:
+            prompt = self.prompt(self._model_name_or_path, messages, **kwargs)
 
-        prompt = self.prompt(self.model_name_or_path, messages, **kwargs)
-        if prompt is None:
-            return None
+            generated_text = self._backend_runtime.completion(prompt, **kwargs)
+            return generated_text
 
-        generated_text = self.backend_runtime.completion(prompt, **kwargs)
-        return generated_text
-
-    def validation(self, messages: List[ChatMessage]) -> bool:
-        assert len(messages) > 0, "messages should not be empty"
-        assert (
-            messages[-1].role == consts.USER_PROMPT
-        ), "last message should be user prompt"
-
-        if self.get_config("support_system_prompt"):
-            for i, msg in enumerate(messages):
-                if msg.role == consts.SYSTEM_PROMPT:
-                    assert i == 0, "system prompt should be in the first role"
-        else:
+        if self._backend == consts.BACKEND_VLLM:
+            prompts = []
             for msg in messages:
-                assert msg.role != consts.SYSTEM_PROMPT, "system prompt not supported"
+                pt = self.prompt(self._model_name_or_path, msg, **kwargs)
+                prompts.append(pt)
 
-        return True
+            generated_text = self._backend_runtime.completion(prompts, **kwargs)
+            return generated_text
+
+    def validation(
+        self,
+        messages: Union[List[ChatMessage], List[List[ChatMessage]]],
+    ):
+        if self._backend == consts.BACKEND_VLLM:
+            assert all(
+                isinstance(item, list) for item in messages
+            ), "vLLM only supports batch inference"
+        else:
+            assert all(
+                isinstance(item, ChatMessage) for item in messages
+            ), "batch inference only supports with vLLM backend"
+
+        assert len(messages) > 0, "messages should not be empty"
+
+        def validate(messages: List[ChatMessage]):
+            assert len(messages) > 0, "messages should not be empty"
+            assert (
+                messages[-1].role == consts.USER_PROMPT
+            ), "last message should be user prompt"
+
+            if self.get_config("support_system_prompt"):
+                for i, msg in enumerate(messages):
+                    if msg.role == consts.SYSTEM_PROMPT:
+                        assert i == 0, "system prompt should be in the first role"
+            else:
+                for msg in messages:
+                    assert (
+                        msg.role != consts.SYSTEM_PROMPT
+                    ), "system prompt not supported"
+
+        if all(isinstance(item, list) for item in messages):
+            [validate(messages=item) for item in messages]
+        else:
+            validate(messages=messages)
 
     @classmethod
     def prompt(

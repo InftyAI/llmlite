@@ -1,18 +1,9 @@
-import os
-
 from llmlite.apis import ChatLLM, ChatMessage
-
-
-# This is help to test more efficiently with models pre-downloaded.
-def build_model(model_name: str) -> str:
-    path = os.getenv("MODEL_PATH")
-    if path is not None:
-        return path + "/" + model_name
-    return model_name
+from tests.integration_tests.util import build_model
 
 
 class TestChat:
-    def test_with_llama(self):
+    def test_llama(self):
         test_cases = [
             {
                 "name": "local model with llama 2",
@@ -42,7 +33,7 @@ class TestChat:
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0, "got result: " + result
 
-    def test_with_chatglm(self):
+    def test_chatglm(self):
         test_cases = [
             {
                 "name": "local model with chatglm2",
@@ -65,7 +56,7 @@ class TestChat:
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0, "got result: " + result
 
-    def test_with_chatgpt(self):
+    def test_chatgpt(self):
         test_cases = [
             {
                 "name": "test with gpt-3.5-turbo",
@@ -100,7 +91,7 @@ class TestChat:
             result = chat.completion(messages=tc["messages"])
             assert len(result) > 0, "got result: " + result
 
-    def test_with_codellama(self):
+    def test_codellama(self):
         test_cases = [
             {
                 "name": "test with only user prompt",
@@ -131,7 +122,7 @@ class TestChat:
             )
             assert len(result) > 0, "got result: " + result
 
-    def test_with_baichuan(self):
+    def test_baichuan(self):
         test_cases = [
             {
                 "name": "enable system prompt",
