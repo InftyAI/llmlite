@@ -1,4 +1,4 @@
-from llmlite.apis import ChatLLM, ChatMessage
+from llmlite import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="meta-llama/Llama-2-7b-chat-hf",

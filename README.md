@@ -1,6 +1,16 @@
 # llmlite
 
-A library helps to communicate with all kinds of LLMs consistently.
+**llmlite** is a library helps to communicate with all kinds of LLMs consistently.
+
+## Features
+
+- State-of-the-art LLMs support
+- Continuous Batching via [vLLM](https://github.com/vllm-project/vllm)
+- Quantization([issue#37](https://github.com/InftyAI/llmlite/issues/37))
+- Adapter support([issue#51](https://github.com/InftyAI/llmlite/issues/51))
+- Streaming support([issue#52](https://github.com/InftyAI/llmlite/issues/52))
+
+### Model Support
 
 | Model | State | System Prompt | Note |
 | ---- | ---- | ---- | ---- |
@@ -14,20 +24,18 @@ A library helps to communicate with all kinds of LLMs consistently.
 | Falcon | RoadMap 📋 | | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
 | StableLM | RoadMap 📋 | | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
 | Baichuan2 | RoadMap 📋 | | [issue#34](https://github.com/InftyAI/llmlite/issues/34)
-| ... | ... | ... | ... |
 
-We're also planning to support different inference backends as below:
+### Backend Support
 
 | backend | State | Note |
 | ---- | ---- | ---- |
 | [huggingface](https://github.com/huggingface) | Done ✅ | Support by huggingface pipeline |
 | [vLLM](https://github.com/vllm-project/vllm) | Done ✅ | |
-| ... | ... | ... |
 
 ## How to install
 
 ```cmd
-pip install llmlite==0.0.9
+pip install llmlite==0.0.15
 ```
 
 ## How to use
@@ -35,7 +43,7 @@ pip install llmlite==0.0.9
 ### Chat
 
 ```python
-from llmlite.apis import ChatLLM, ChatMessage
+from llmlite import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="meta-llama/Llama-2-7b-chat-hf", # required
@@ -53,6 +61,35 @@ result = chat.completion(
 
 ```
 
+### Continuous Batching
+
+_This is mostly supported by vLLM, you can enable this by configuring the **backend**._
+
+```python
+from llmlite import ChatLLM, ChatMessage
+
+chat = ChatLLM(
+    model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
+    backend="vllm",
+)
+
+results = chat.completion(
+    messages=[
+        [
+            ChatMessage(role="system", content="You're a honest assistant."),
+            ChatMessage( role="user", content="There's a llama in my garden, what should I do?"),
+        ],
+        [
+            ChatMessage(role="user", content="What's the population of the world?"),
+        ],
+    ],
+    max_tokens=2048,
+)
+
+for result in results:
+    print(f"RESULT: \n{result}\n\n")
+```
+
 `llmlite` also supports other parameters like `temperature`, `max_length`, `do_sample`, `top_k`, `top_p` to help control the length, randomness and diversity of the generated text.
 
 See **[examples](./examples/)** for reference.
@@ -62,14 +99,14 @@ See **[examples](./examples/)** for reference.
 You can use `llmlite` to help you generate full prompts, for instance:
 
 ```python
-from llmlite.apis import ChatMessage, LlamaChat
+from llmlite import ChatLLM
 
 messages = [
     ChatMessage(role="system", content="You're a honest assistant."),
     ChatMessage(role="user", content="There's a llama in my garden, what should I do?"),
 ]
 
-LlamaChat.prompt(messages)
+ChatLLM.prompt("meta-llama/Llama-2-7b-chat-hf", messages)
 
 # Output:
 # <s>[INST] <<SYS>>
@@ -82,12 +119,6 @@ LlamaChat.prompt(messages)
 ### Logging
 
 Set the env variable `LOG_LEVEL` for log configuration, default to `INFO`, others like DEBUG, INFO, WARNING etc..
-
-## Roadmap
-
-- Adapter support
-- Quantization
-- Streaming
 
 ## Contributions
 

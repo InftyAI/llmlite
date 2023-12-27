@@ -1,4 +1,4 @@
-from llmlite.apis import ChatLLM, ChatMessage
+from llmlite import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="codellama/CodeLlama-13b-instruct-hf",
