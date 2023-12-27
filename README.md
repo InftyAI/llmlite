@@ -1,6 +1,6 @@
 # llmlite
 
-**llmlite** is a library helps to communicate with all kinds of LLMs consistently.
+**🌵** llmlite is a library helps to communicate with all kinds of LLMs consistently.
 
 ## Features
 
