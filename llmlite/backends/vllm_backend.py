@@ -13,6 +13,8 @@ class VLLMBackend(Backend):
         **kwargs,
     ):
         trust_remote_code = kwargs.pop("trust_remote_code", True)
+        # 'task' is an unexpected keyword argument to vLLM.
+        _ = kwargs.pop("task", None)
 
         self._model = vllm(
             model=model_name_or_path,

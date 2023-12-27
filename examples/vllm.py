@@ -1,12 +1,11 @@
-from llmlite.apis import ChatLLM, ChatMessage
+from llmlite import ChatLLM, ChatMessage
 
 chat = ChatLLM(
     model_name_or_path="meta-llama/Llama-2-7b-chat-hf",
-    task="text-generation",
     backend="vllm",
 )
 
-result = chat.completion(
+results = chat.completion(
     messages=[
         [
             ChatMessage(role="system", content="You're a honest assistant."),
@@ -15,8 +14,7 @@ result = chat.completion(
             ),
         ],
         [
-            ChatMessage(role="system", content="You're a honest assistant."),
-            ChatMessage(role="user", content="How many people are their in China?"),
+            ChatMessage(role="user", content="How many people are there in China?"),
         ],
     ],
     max_tokens=2048,
@@ -25,4 +23,5 @@ result = chat.completion(
     # top_k=3,
 )
 
-print(result)
+for result in results:
+    print(f"RESULT: \n{result}\n\n")

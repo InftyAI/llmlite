@@ -1,4 +1,4 @@
-from llmlite.apis import ChatLLM, ChatMessage
+from llmlite import ChatLLM, ChatMessage
 
 # You should set the OPENAI_API_KEY first.
 
