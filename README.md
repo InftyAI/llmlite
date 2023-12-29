@@ -6,9 +6,9 @@
 
 - State-of-the-art LLMs support
 - Continuous Batching via [vLLM](https://github.com/vllm-project/vllm)
-- Quantization([issue#37](https://github.com/InftyAI/llmlite/issues/37))
-- Adapter support([issue#51](https://github.com/InftyAI/llmlite/issues/51))
-- Streaming support([issue#52](https://github.com/InftyAI/llmlite/issues/52))
+- Quantization([issue#37] (<https://github.com/InftyAI/llmlite/issues/37>))
+- Loading specific adapters ([issue#51](https://github.com/InftyAI/llmlite/issues/51))
+- Streaming ([issue#52](https://github.com/InftyAI/llmlite/issues/52))
 
 ### Model Support
 
@@ -18,19 +18,18 @@
 | Llama-2 | Done ✅ | Yes | |
 | CodeLlama | Done ✅ | Yes | |
 | ChatGLM2 | Done ✅ | No | |
-| ChatGLM3 | WIP ⏳ | Yes | |
 | Baichuan2 | Done ✅ | Yes | |
+| ChatGLM3 | WIP ⏳ | Yes | |
 | Claude-2 | RoadMap 📋 | | [issue#7](https://github.com/InftyAI/ChatLLM/issues/7)
 | Falcon | RoadMap 📋 | | [issue#8](https://github.com/InftyAI/ChatLLM/issues/8)
 | StableLM | RoadMap 📋 | | [issue#11](https://github.com/InftyAI/ChatLLM/issues/11) |
-| Baichuan2 | RoadMap 📋 | | [issue#34](https://github.com/InftyAI/llmlite/issues/34)
 
 ### Backend Support
 
-| backend | State | Note |
-| ---- | ---- | ---- |
-| [huggingface](https://github.com/huggingface) | Done ✅ | Support by huggingface pipeline |
-| [vLLM](https://github.com/vllm-project/vllm) | Done ✅ | |
+| backend | State |
+| ---- | ---- |
+| [huggingface](https://github.com/huggingface) | Done ✅ |
+| [vLLM](https://github.com/vllm-project/vllm) | Done ✅ |
 
 ## How to install
 
