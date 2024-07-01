@@ -1,5 +1,7 @@
 # llmlite
 
+ [![Latest Release](https://img.shields.io/github/v/release/inftyai/llmlite?include_prereleases)](https://github.com/inftyai/llmlite/releases/latest)
+
 **🌵** llmlite is a library helps to communicate with all kinds of LLMs consistently.
 
 ## Features
