@@ -9,7 +9,6 @@ __pycache__
 .empty/
 .pytest_cache/
 
-/tmp/
-*demo.py
+/temp/
 
 dist/
